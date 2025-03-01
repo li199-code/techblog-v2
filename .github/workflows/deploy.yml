@@ -1,39 +1,63 @@
 name: Deploy to GitHub Pages
 
+# 触发工作流的事件
 on:
-  # Trigger the workflow every time you push to the `main` branch
-  # Using a different branch name? Replace `main` with your branch’s name
+  # 在推送到 main 分支时触发
   push:
-    branches: [main]
-  # Allows you to run this workflow manually from the Actions tab on GitHub.
+    branches:
+      - main
+  # 允许手动触发工作流
   workflow_dispatch:
 
-# Allow this job to clone the repo and create a page deployment
+# 设置权限
 permissions:
   contents: read
   pages: write
   id-token: write
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout your repository using git
-        uses: actions/checkout@v4
-      - name: Install, build, and upload your site output
-        uses: withastro/action@v2
-        # with:
-        # path: . # The root location of your Astro project inside the repository. (optional)
-        # node-version: 20 # The specific version of Node that should be used to build your site. Defaults to 18. (optional)
-        # package-manager: pnpm@latest # The Node package manager that should be used to install dependencies and build your site. Automatically detected based on your lockfile. (optional)
+# 环境变量
+env:
+  NODE_VERSION: 18 # 根据你的项目需求调整 Node.js 版本
 
-  deploy:
-    needs: build
+jobs:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
+      # 1. 检出代码
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. 设置 Node.js 环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm" # 缓存 npm 依赖
+
+      # 3. 安装依赖
+      - name: Install Dependencies
+        run: npm ci
+
+      # 4. 构建 Astro 项目
+      - name: Build Astro Site
+        run: npm run build
+        env:
+          # 如果你的 Astro 配置中使用 base，需要在这里设置
+          BASE_PATH: "/${{ github.event.repository.name }}"
+
+      # 5. 配置 GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # 6. 上传构建产物
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Astro 默认构建输出目录是 dist
+          path: ./dist
+
+      # 7. 部署到 GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
