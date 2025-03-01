@@ -30,14 +30,11 @@ const anyProjects =
         }
       </TextLink>
       <nav class="flex items-center gap-1 text-sm">
-        <TextLink href={resolvePath("/hire-me", Astro.url.pathname)}
-          >hire me</TextLink
-        >
         {" "}
         {
           anyBlogPosts && (
             <>
-              <span>{`|`}</span>
+              <span></span>
               <TextLink href={resolvePath("/blog", Astro.url.pathname)}>
                 blog
               </TextLink>

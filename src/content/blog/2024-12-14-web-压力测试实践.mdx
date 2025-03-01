@@ -1,0 +1,85 @@
+---
+title: "Nodejs Web 服务压力测试及优化实践"
+authors: Jason
+date: 2024-12-14
+description: "nodejs压力测试实践"
+tags: [压力测试]
+---
+
+import LinkCard from "../../components/LinkCard.astro";
+
+这阵子学习《Nodejs 实战》的时候，有看到压力测试的话题，恰好最近工作中也遇到一些高负载场景，所以把这些知识和工具整理出来。
+
+{/* truncate */}
+
+## 概念
+
+首先明确我们做压力测试的目的：获得系统的承受能力上限，找到 bottleneck，然后针对 bottleneck 做优化。一般程序能在两个方面做出优化：1. 吞吐量，即每秒处理多少请求；2. 响应时间，即请求处理完到返回给客户端的时间。系统资源指标是 cpu 占用率和内存占用率。
+
+所有的压测工具都会给出都会返回一个 benchmark 结果，包括：
+
+- 请求总数
+- 请求成功总数
+- 请求失败总数
+- 响应时间分布
+- QPS 分布
+
+一般来说，我们需要关注 TP99 的 QPS 和延迟，因为这个分位能够反应出系统在压力下的吞吐能力，也是很多 SLA（服务级别协议）所定的性能指标。
+
+## NodeJS 压测工具
+
+autocannon 是 Nodejs 社区最流行的压测工具，安装和运行有两种方式：
+
+1. 直接在命令行中运行：
+
+```bash
+autocannon -c 100 -d 10 http://localhost:3000/
+```
+
+这种需要全局安装：`npm install -g autocannon`. 这种方式能在控制台打印出 benchmark 的结果，比较美观。
+
+2. 在代码中调用：
+
+```javascript
+const autocannon = require('autocannon')
+const url = 'http://localhost:3000/'
+const instance = autocannon({
+  url,
+  connections: 100,
+  duration: 10,
+  requests: [
+    {
+      method: 'GET',
+      path: '/'
+      headers: {
+        'User-Agent': 'autocannon'
+        'Content-Type': 'application/json'
+      },
+    },
+  ]
+})
+
+instance.on('done', (results) => {
+    console.log(results)
+
+    // console.log('qps tp99: ', results.requests.p1)
+    // console.log('latency tp99: ', results.latency.p99)
+});
+```
+
+当你的请求需要 token 等复杂的请求头时，这种脚本形式显然更方便。
+
+## Nodejs 优化准则
+
+Nodejs 依靠非阻塞 IO 和事件循环机制能在单线程下实现高并发。它能取得高并发的前提是让事件循环尽可能活跃，因此要减少 cpu 阻塞任务的执行时间。这方面最常用的做法是空间换时间（如把接口中的 cpu 阻塞任务的结果缓存起来），以及把任务 offload 到 worker threads 中。
+
+另外，利用 pm2 工具起一个多核多进程的集群，让每个进程都跑在单独的线程上，这样能充分利用多核。最佳实践是把 pm2 的进程数设置为 CPU 核数的一半。
+
+## 优化实践
+
+需要借助工具配合压测来观察 cpu 和内存占用率。Nodejs 是基于 V8 引擎的，chrome 也同样内置了 V8，所以可以借助 chrome dev tool 来对 Nodejs 进行调试。对入口文件运行`node --inspect-brk index.js`，返回一个 ws 链接，去到 chrome 浏览器的地址栏，输入`chrome://inspect`, 就能看到 Nodejs 进程了。具体参照下面的链接：
+
+<LinkCard
+  title="NodeJs进阶开发、性能优化指南"
+  link="https://juejin.cn/post/7095354780079357966?from=search-suggest#heading-4"
+/>

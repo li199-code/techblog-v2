@@ -1,0 +1,157 @@
+---
+title: "Go 项目模块机制"
+authors: Jason
+date: 2024-11-23
+description: "Go模块机制，重点讲import相关用法"
+tags: [Go]
+---
+
+import LinkCard from "../../components/LinkCard.astro";
+
+掌握任何一个真实项目，必然要以熟悉编程语言的模块系统为前提。Go 的模块系统有一些独特之处，在这里做一下完整记录。
+
+{/* truncate */}
+
+## GOPATH 和 Go Module
+
+windows 安装 Go 时，有一个步骤是设置 GOPATH 环境变量，值是工作空间路径，默认可以设置为 `C:\Users\<用户名>\go`。早期版本，Go 项目只能放在 GOPATH 目录下。从 1.13 版本开始，Go Mudules 成为默认的依赖管理方式。Modules 规定了内部模块的命名和依赖、项目版本管理和外部依赖。如果项目使用 Go Modules，GOPATH 主要用于存放下载的依赖包（缓存）等内容。
+
+## 使用 Go Modules 的步骤
+
+#### 1. 初始化 Go Modules
+
+在项目的根目录下运行以下命令：
+
+```bash
+go mod init <module-name>
+```
+
+- `<module-name>` 通常是项目的模块路径（比如 Git 仓库地址），例如：
+
+```bash
+go mod init github.com/username/projectname
+```
+
+- 如果只是本地项目，可以随意指定一个名称，比如：
+
+```bash
+go mod init myproject
+```
+
+运行完成后，会生成一个 `go.mod` 文件，内容如下：
+
+```go
+module myproject
+
+go 1.20 // 你的 Go 版本
+```
+
+#### 2. 开发你的项目
+
+你可以在当前目录下自由组织代码，比如：
+
+```go
+myproject/
+  ├── go.mod
+  ├── main.go
+  └── pkg/
+      └── mylib/
+          └── mylib.go
+```
+
+在 `main.go` 中可以正常导入包：
+
+```go
+package main
+
+import "myproject/pkg/mylib" // 路径以项目名开头
+
+func main() {
+    mylib.Hello()
+}
+```
+
+#### 3. 添加依赖
+
+如果项目需要引入外部依赖库，直接在代码中使用 `import`，然后运行以下命令安装依赖：
+
+```bash
+go mod tidy
+```
+
+这会更新 `go.mod` 并生成一个 `go.sum` 文件，用于下载的校验。
+
+#### 4. 编译和运行项目
+
+运行项目时，Go 会自动处理依赖：
+
+```bash
+go run main.go
+```
+
+或者生成二进制文件：
+
+```bash
+go build
+```
+
+#### 5. 项目与依赖的分离
+
+项目源码和依赖会被分开存储：
+
+- 项目源码保存在你定义的目录中（不受 `GOPATH` 限制）。
+
+- 依赖库缓存保存在 `GOPATH/pkg/mod` 目录中。
+
+## 如何修改依赖版本
+
+`go get`命令也是go modules系统中的一个命令，用来管理依赖包。运行它可以下载和更新依赖。例如，要更新依赖库，你可以运行：
+
+```bash
+go get -u <dependency-name>@version
+```
+
+`go get`也会自动更新`go.mod`和`go.sum`。
+
+## init 函数和 import
+
+本节内容引用自：
+
+<LinkCard
+  title="8小时转职Golang工程师"
+  link="https://www.yuque.com/aceld/mo95lb/kk9cvo"
+/>
+
+golang 里面有两个保留的函数：init 函数（能够应用于所有的 package）和 main 函数（只能应用于 package main）。这两个函数在定义时不能有任何的参数和返回值。
+
+虽然一个 package 里面可以写任意多个 init 函数，但这无论是对于可读性还是以后的可维护性来说，我们都强烈建议用户在一个 package 中每个文件只写一个 init 函数。
+
+go 程序会自动调用 init()和 main()，所以你不需要在任何地方调用这两个函数。每个 package 中的 init 函数都是可选的，但 package main 就必须包含一个 main 函数。
+
+程序的初始化和执行都起始于 main 包。如果 main 包还导入了其它的包，那么就会在编译时将它们依次导入。有时一个包会被多个包同时导入，那么它只会被导入一次（例如很多包可能都会用到 fmt 包，但它只会被导入一次，因为没有必要导入多次）。
+
+当一个包被导入时，如果该包还导入了其它的包，那么会先将其它包导入进来，然后再对这些包中的包级常量和变量进行初始化，接着执行 init 函数（如果有的话），依次类推。等所有被导入的包都加载完毕了，就会开始对 main 包中的包级常量和变量进行初始化，然后执行 main 包中的 init 函数（如果存在的话），最后执行 main 函数。下图详细地解释了整个执行过程：
+
+![init函数的作用链](https://img.jasonleehere.com/202411231522117.png)
+
+## 匿名导入和别名导入
+
+在 Go 语言中，我们可以用 `_` 作为匿名导入，这样可以避免导入一些不需要的包。例如：
+
+```go
+import (
+	"fmt"
+	_ "moduleTest/lib1"
+)
+```
+
+这样，我们只导入了 `fmt` 包，而 `lib1` 包中的代码就不会被执行。但是lib1中的init函数仍会被执行。
+
+如果我们想导入一个包，但又想给它起一个别名，可以在同样位置加上别名。例如：
+
+```go
+import (
+	"fmt"
+	we2 "moduleTest/lib2"
+)
+```

@@ -1,7 +1,7 @@
 ---
+// TableOfContents.astro
 import TableOfContentsHeading from "./TableOfContentsHeading.astro";
 
-// https://kld.dev/building-table-of-contents/
 const { headings } = Astro.props;
 const toc = buildToc(headings);
 
@@ -12,15 +12,33 @@ export interface Heading {
 }
 
 function buildToc(headings: Heading[]) {
-  const toc: Heading[] = [];
-  const parentHeadings = new Map();
+  const toc: any[] = []; // 使用 any[] 临时解决类型问题，或者定义一个完整的 Heading 接口
+  const parentHeadings = new Map<number, any>();
+
   headings.forEach((h) => {
     const heading = { ...h, subheadings: [] };
     parentHeadings.set(heading.depth, heading);
+
     if (heading.depth === 2) {
       toc.push(heading);
-    } else {
-      parentHeadings.get(heading.depth - 1).subheadings.push(heading);
+    } else if (heading.depth > 2) {
+      // 寻找最近的父级 heading
+      let parentDepth = heading.depth - 1;
+      let parent = parentHeadings.get(parentDepth);
+
+      // 如果父级不存在，向上一级寻找，直到找到或到达 depth 2
+      while (!parent && parentDepth > 2) {
+        parentDepth--;
+        parent = parentHeadings.get(parentDepth);
+      }
+
+      // 如果找到了父级，将当前 heading 添加到其 subheadings
+      if (parent) {
+        parent.subheadings.push(heading);
+      } else {
+        // 如果没有合适的父级（极端情况），可以选择添加到 toc 根级别
+        toc.push(heading);
+      }
     }
   });
   return toc;

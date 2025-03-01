@@ -1,0 +1,52 @@
+---
+title: "LLM short intuitive explanation "
+authors: Jason
+date: 2025-02-16
+description: "更了解大模型了"
+tags: []
+---
+
+import LinkCard from "../../components/LinkCard.astro";
+
+记录观看 karpathy 大神的[长视频](https://www.youtube.com/watch?v=7xTGNNLPyMI&ab_channel=AndrejKarpathy)的笔记。
+
+{/* truncate */}
+
+## pretraining
+
+收集庞大的数据集（如 huggingface 的 fineweb2），利用预训练好的 tokenizer 给文字编制数字索引，然后通过 embedding 层转化为高维向量，在 embedding 层训练过程中，具有相近词意的 token 的向量会接近。pretraining 阶段最终生成的是 base model，也就是一个根据上文自动补全的机器人，还不是一个问答助手。
+
+base model 模型特点：
+
+- 时效性：数据会精准记忆出训练语料中出现过的内容，但是如果没有出现，很容易胡言乱语（幻觉）。
+- 随机性：每次下文输出内容不会完全相同，因为最后的模型输出采用了采样机制，引入了随机性。比如在在 softmax 给出最有可能的前三个词中随机选一个。
+
+网站资源：
+
+- tiktokenizer tokenizer
+- bbycroft llm 网络可视化
+
+## post training
+
+这阶段更换训练数据集，换成一问一答的格式，这些数据都是人类标记出来的。即所谓的 Supervised Fine-Tuning, SFT。此外，这阶段还完成减轻幻觉的工作。具体方法是，探寻 base model 的知识边界，然后把一些明显幻觉的问题标注出来，label 是“我不知道”，加入训练集中进行训练。这样，llm 能学到在他不熟悉的问题能诚实回答不知道。此外，还可以借助联网搜索，这种 label 带上了联网搜索的标记，并加上用户问题，然后把搜索的结果作为上文输入，并总结成回答。这一阶段生成的 model 成为 instruct。
+
+有趣的事实：
+
+- 如何看待问 deepseek“你是什么模型”，回答“我是 chatgpt"? 之所以出现这种回答，是预训练语料中出现了类似场景，然后 post training 阶段没有做对应的微调，比如在 sft 训练集中加入这个问题和定制的答案”我是 deepseek“。或者没有在 system prompt 中加入”你是 deepseek“的提示词。
+- 当询问一个需要计算或者思考过程的问题，引导模型展示中间步骤对于结果的正确有积极作用。这是因为，llm 是逐 token 吐出的，下一个 token 是根据之前一定大小的 window 生成的。如果省去中间过程直接出结果，对于模型的要求太高，就容易产生幻觉。因此提示词最后包含 step by step 会更好。或者是”use code", llm 会把 code 送到其他服务器单独执行并返回结果，这样利用 llm 的 tool use，结果更可靠。
+
+## RL
+
+post training 主要是在模仿人类专家解答问题。因此，模型能力是有上限的，即人类专家。LLM 的强化学习是让模型对同一问题的不同解法进行打分，然后自我学习，自我进化，最终产生超越人类专家的思考新范式。就如同 alphago，在击败人类最强棋手后，自我对弈，最终独步天下。
+
+还有一种 RL，叫做 RLHF，是指引入打分模型，对模型进行微调，使回答更符合人类喜好。这种甚至没有被 Karpathy 归类为真正的 RL，因为他没有增加多少模型智能。
+
+## 资源
+
+- lmarena.ai 大模型排行榜，根据用户实际使用体验
+
+- [AI 新闻](https://buttondown.com/ainews/archive/ainews-small-news-items/)
+
+## 总结
+
+这个三个半小时的视频，让我对大模型内部有了直观了解。RL 部分不熟悉，所以写的不好。后面补齐这部分知识。

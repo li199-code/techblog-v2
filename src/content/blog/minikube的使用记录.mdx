@@ -1,0 +1,119 @@
+---
+title: 基于 minikube 的本地 k8s 操作实践
+summary: minikube在windows笔记本上的安装运行，kubectl的使用，yaml文件的编写
+tags: [k8s]
+abbrlink: dab56f78
+date: 2024-06-19 21:44:57
+---
+
+import LinkCard from "../../components/LinkCard.astro";
+
+在之前写的[k8s 入门](https://blog.jasonleehere.com/posts/b702da18.html)中，介绍了两个在线平台运行 k8s 命令。其实，本地也可以运行 minikube 这个精简版。下面记录一下它的使用过程。
+
+{/* truncate */}
+
+## 安装
+
+![minikube架构](https://cdn.jsdelivr.net/gh/li199-code/blog-imgs@main/17188050260521718805025772.png)
+
+简而言之，一个节点中包含了控制进程和工作进程，因此一台笔记本也能模拟 k8s 集群。
+
+<LinkCard title="minikube 文档" link="https://minikube.sigs.k8s.io/docs/" />
+
+minikube 的默认启动命令是`minikube start`，命令行启动界面：
+
+![minikube启动界面](https://cdn.jsdelivr.net/gh/li199-code/blog-imgs@main/17187761890551718776188800.png)
+
+可以看出，我本机上的 minikube 版本号为 1.32.0，且使用到了预装的 docker 和 kubectl，k8s 的版本号为 1.28.3. 启动后，docker desktop 显示多了一个 minikube 容器，是为 node。
+启动时，如果机器上提前安装了kubectl，那么minikube会将kubectl的config指向minikube的配置文件。通过`kubectl config view`命令可以查看到当前的配置。
+
+![minikube kubectl config](https://img.jasonleehere.com/202410191156147.png)
+
+## 运行
+
+## kubectl
+
+kubectl 是一个命令行工具，需要单独安装。通过它，操控 k8s 的各级资源。这是kubectl的速记表：
+
+<LinkCard
+  title="kubectl cheat sheet"
+  link="https://spacelift.io/blog/kubernetes-cheat-sheet"
+/>
+
+minikube教程中提供了一个`kubernetes 101`教程，里面完整介绍了一个项目用到的kubectl命令：
+
+<LinkCard
+  title="Kubernetes 101"
+  link="https://minikube.sigs.k8s.io/docs/tutorials/kubernetes_101/"
+/>
+
+## yaml 文件编写
+
+yaml 文件的四个必要部分：apiversion, kind, metadata, spec
+
+- apiVersion: 指定资源的 API 版本，例如 v1。
+- kind: 指定资源的类型，例如 Pod、Service、Deployment 等。
+- metadata: 提供资源的元数据，例如名称、命名空间、标签等。
+- spec: 指定资源的具体配置，内容根据资源类型的不同而有所不同。
+
+一份示例 yaml 文件：
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+  labels:
+    app: myapp
+spec:
+  containers:
+    - name: mycontainer
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydeployment
+  labels:
+    app: myapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: mycontainer
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+```
+
+一般 yaml 文件不要求从头写，而是从模板复制：
+
+<LinkCard
+  title="kubernetes 官方文档"
+  link="https://kubernetes.io/zh-cn/docs/concepts"
+/>
+
+运行 yaml 文件的命令：`kubectl apply -f test.yaml`。
+
+spec 下的 replicas 字段指 pod 数量，不论 kind 是 deployment 或者 replicaset。
+
+另外，yaml 文件还有一个实时更新的部分：status。它记录了当前状态和 yaml 文件的目标状态之间的差异。
+
+labels 作用：template 下的 labels 是给一种 pod 打上相同的标签；selector 下的 matchLabels 则是告诉 Deployment，replicas 是使用该标签下的 pod。
+
+## Nana 教程中 mongo-express 例子最后的坑
+
+在例子的最后，命令行执行`minikube service mongo-express-service`后，有如下日志：
+
+![命令行输出](https://cdn.jsdelivr.net/gh/li199-code/blog-imgs@main/17188988784971718898877642.png)
+
+下面那行才是本机浏览器可访问的地址。只是还需要账号密码。nana 的视频并不需要输入账号密码。在 stackoverflow 上找到答案，这里的账号密码是 mongo-express 要求提供的，默认是 admin:pass。

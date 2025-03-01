@@ -1,0 +1,59 @@
+---
+title: 用一个例子来记住 k8s 核心概念
+tags: [k8s, devops]
+abbrlink: b702da18
+date: 2024-03-16 10:10:36
+categories:
+summary: 每看一次nana的k8s教程，都会有新的收获。记录一下自己对k8s的理解。
+---
+
+import LinkCard from "../../components/LinkCard.astro";
+
+k8s 一直以概念繁杂著称。在容器编排这个领域，它是统治级的存在，可以说它就代表了这个领域内的几乎所有知识。因为我对这个领域并不熟悉，所以很难记住这些概念。只能一次次地翻看基础教程。
+
+k8s 的背景是容器化部署盛行，加上微服务要求，一个系统的容器数量成百上千，这样，必须有一个专门的编排工具，达到高可用、可伸缩等目的。
+
+{/* truncate */}
+
+首先，k8s 是 kubernetes 的简称，因为 k 和 s 之间有八个字母。我之前一直以为 8 来自 b，是国人的专属简称，哈哈。还有，orchestration, 编排，字面意义就是对容器的管理。
+
+安装的话，我在笔记本的 windows 上和云主机的 centos7 上都安装失败了。笔记本上是想着按照虚拟机的方案模拟集群，但是 vmware 的 player 非常难用，换成基于 ubuntu 的轻量虚拟机 multipass 也失败了。最后发现，还是在线环境适合这种大型软件的学习。一共两个可选项：
+
+<LinkCard
+  title="killerconda"
+  description=""
+  link="https://killercoda.com/playgrounds/scenario/kubernetes"
+/>
+
+<LinkCard
+  title="play-with-k8s"
+  description=""
+  link="https://labs.play-with-k8s.com/"
+/>
+
+play-with-k8s 的网页命令行不能执行复制粘贴，killercoda 不仅可以粘贴命令，而且是已经设置好集群了（包含控制平面和一个工作节点）。所以，推荐 killercoda。
+
+## 基础概念
+
+<LinkCard
+  title="Demystifying the Nuts & Bolts of Kubernetes Architecture"
+  description="一个ppt介绍完k8s架构"
+  link="https://collabnix.github.io/kubelabs/Kubernetes_Intro_slides-1/Kubernetes_Intro_slides-1.html"
+/>
+
+让我们从一个大洋上航行的货运船队谈起。想象一艘货轮，上面满载着集装箱（容器），这艘货轮就是worker node。船队的头领所在的船负责指挥调度所有的货轮，也就是master。在master上，
+有很多职能不同的办公室。负责将容器调度到正确的工作节点上的办公室，叫scheduler。记录所有容器各自在哪条船上的办公室，叫etcd。还有一个controller大办公室，负责三件事：
+
+- 监控node状态（node Controller）
+- 确保一个副本中始终有指定数量的容器运行（replica Controller）
+- 确保上述两种controller到位
+
+最后剩下一个联络处，负责接收外部请求，以及船队内部的通信，叫做API Server.
+
+介绍完了master架构，下面介绍worker nodes内部。kubelet是这艘船的头领。kube-proxy负责不同工作节点之间的网络通信。Pod是容器在船上的载体，代表了容器。
+
+![k8s集群架构](https://img.jasonleehere.com/202410172344585.png)
+
+## 从头开始
+
+说了这么多，有必要把一个应用是如何由原来的直接部署或者 docker 部署迁移到 k8s 上的完整流程叙述一遍。首先，把手头上拥有的机器资源做个清点，划分出控制节点和工作节点。然后，在每台机器上都装上 Kubeadm, Kubelet 和 Kubectl。在控制节点上执行`kubeadm init`初始化集群；在工作节点上执行`kubeadm join`加入集群。验证集群是否成立。最后就是编写 yaml 文件，在任意一个节点上执行`kubectl apply -f`执行 yaml 配置（无论哪个节点，kubectl 都会到控制节点的 api-server 中）。

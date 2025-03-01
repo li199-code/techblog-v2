@@ -1,0 +1,207 @@
+---
+title: "动手k8s之Nodejs + Mysql"
+authors: Jason
+date: 2024-12-15
+description: "应用+数据库 k8s yaml最小示例"
+tags: ["k8s", "minikube"]
+---
+
+import LinkCard from "../../components/LinkCard.astro";
+
+每次学习中碰到 k8s，都会被它的复杂性难住。现在网上的教程，要么直接指定 image，省略了 yaml 文件的编写，要么是只有应用节点，没有数据库节点，这就和实际生产环境脱离。所以，我决定自己从头搭建一个集群，整合 Nodejs 和 mysql，打造一个最小示例，作为备忘记录。
+
+{/* truncate */}
+
+## 环境
+
+环境为 win11 + docker desktop + minikube。`minikube start`。
+
+## 打造 Nodejs 服务镜像
+
+服务只能手动打造了。本地建立一个 nodejs-app 文件夹，然后添加 app.js:
+
+```js
+const express = require("express");
+const mysql = require("mysql2");
+
+const app = express();
+const port = 3000;
+
+const db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
+
+db.connect((err) => {
+  if (err) {
+    console.error("Error connecting to MySQL:", err.stack);
+    return;
+  }
+  console.log("Connected to MySQL");
+});
+
+app.get("/", (req, res) => {
+  db.query("SELECT NOW()", (err, results) => {
+    if (err) {
+      res.status(500).send("Error querying database");
+    } else {
+      res.send(`Current time from MySQL: ${results[0]["NOW()"]}`);
+    }
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Node.js app listening at http://localhost:${port}`);
+});
+```
+
+然后在根目录下，添加 Dockerfile:
+
+```dockerfile
+FROM node:14-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+
+ENV DB_HOST=mysql
+ENV DB_USER=testuser
+ENV DB_PASSWORD=testpassword
+ENV DB_NAME=testdb
+
+EXPOSE 3000
+CMD ["node", "app.js"]
+```
+
+接下来是把镜像推送到 dockerhub 上。docker login 后，运行`docker build -t nodejs-app:latest .`打造镜像，`docker push nodejs-app xxx/nodejs-app:latest`推送到 dockerhub。
+
+其实还有一种办法可以直接把镜像加载到 minikube 中，但是这次我没有成功。步骤如下：
+
+1. `docker build -t nodejs-app:latest .`
+2. `docker save -o nodejs-app.tar nodejs-app:latest`
+3. `minikube image load nodejs-app:latest`
+
+## 编写 yaml 文件
+
+两份 yaml 文件分别对应 nodejs 服务和 mysql。两份都包含 deployment 和 service。
+
+```yaml
+// nodejs-depl.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-app
+  labels:
+    app: nodejs-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nodejs-app
+  template:
+    metadata:
+      labels:
+        app: nodejs-app
+    spec:
+      containers:
+        - name: nodejs-app
+          image: lfy123/nodejs-app:latest
+          env:
+            - name: DB_HOST
+              value: "mysql"
+            - name: DB_USER
+              value: "testuser"
+            - name: DB_PASSWORD
+              value: "testpassword"
+            - name: DB_NAME
+              value: "testdb"
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-service
+spec:
+  selector:
+    app: nodejs-app
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 30080 # 指定一个 NodePort
+  type: NodePort
+```
+
+```yaml
+// mysql-depl.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: mysql
+ labels:
+   app: mysql
+spec:
+ replicas: 1
+ selector:
+   matchLabels:
+     app: mysql
+ template:
+   metadata:
+     labels:
+       app: mysql
+   spec:
+     containers:
+       - name: mysql
+         image: mysql:8.0
+         env:
+           - name: MYSQL_ROOT_PASSWORD
+             value: "rootpassword"
+           - name: MYSQL_DATABASE
+             value: "testdb"
+           - name: MYSQL_USER
+             value: "testuser"
+           - name: MYSQL_PASSWORD
+             value: "testpassword"
+         ports:
+           - containerPort: 3306
+         volumeMounts:
+           - name: mysql-data
+             mountPath: /var/lib/mysql
+     volumes:
+       - name: mysql-data
+         emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: mysql
+spec:
+ selector:
+   app: mysql
+ ports:
+   - protocol: TCP
+     port: 3306
+     targetPort: 3306
+```
+
+## 部署和验证
+
+```sh
+kubectl apply -f mysql-depl.yaml
+kubectl apply -f nodejs-depl.yaml
+```
+
+验证：
+
+```sh
+kubectl get pods -o wide
+```
+
+因为我们是 minikube，要想在浏览器访问服务，就需要借助 minikube 的 tunnel 功能。
+
+```sh
+minikube service nodejs-service
+```
