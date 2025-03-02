@@ -6,17 +6,35 @@ abbrlink: 28aeba66
 date: 2024-08-20 22:55:05
 ---
 
+import Callout from "@components/Callout.astro";
+
 ## 数据层级关系
 
 mongodb 数据分为三层，分别是 db，collection，document。collection 相当于 table，document 就是一条条的 record。
 
-## 工具
+## 安装和启动
+
+推荐通过docker安装：
+
+```
+docker run -d --name mongodb -p 27017:27017 mongo
+```
+
+这里介绍一下mongod：mongod 是启动 MongoDB 数据库服务的命令，全称是 Mongo Daemon，是 MongoDB 运行的核心。如果你在本地开发或测试，直接运行 mongod 即可启动服务；在 Docker 中，镜像会帮你处理这一步。
+
+## mongoshell
 
 mongodb 安装时会自带一个名为 mongosh 的 shell，而这个 shell 本质上也是一个 JavaScript 解释器。所以在里面可以直接执行 js 命令。
 
+<Callout type="warning">
+  在 MongoDB 8.0 版本中，启动 MongoDB Shell 的命令是
+  mongosh，而不是早期版本中使用的 mongo 命令。mongosh 是 MongoDB 提供的新一代
+  Shell 工具，从 MongoDB 4.4 开始引入，并在后续版本中逐步取代旧的 mongo Shell。
+</Callout>
+
 ![mongosh](https://img.jasonleehere.com/202408202327731.png)
 
-实际使用中似乎很少用 mongosh 的，不太直观。市面上有一些 mongo 的可视化管理工具，比如官方的 MongoDB Compass，Navicat for MongoDB 等。推荐用免费的 MongoDB Compass。
+市面上有一些 mongo 的可视化管理工具，比如官方的 MongoDB Compass，Navicat for MongoDB 等。推荐用免费的 MongoDB Compass。
 
 ## CRUD
 
