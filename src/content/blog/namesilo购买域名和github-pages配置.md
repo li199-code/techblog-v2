@@ -21,3 +21,7 @@ rula.life
 注意：在 pages 设置界面，DNS 检查时，要出现如下显示，才说明 CNAME 和 Namesilo 设置成功：
 
 ![TLS](https://s3.bmp.ovh/imgs/2023/02/25/1d4916ce3a079d2d.png)
+
+2025年更新：
+
+现在已经把域名迁移到cloudflare的nameserver进行dns解析了。在部署时发现一个问题，重新添加custom domain时，无法enforce https。后面查了原因，是因为cf的代理打开了，所有请求要先经过cf，而github pages无法为来自cf的请求刷新https证书。所以解决方案是先关掉cf代理，再刷新github pages页面，这时候就有https证书了。
