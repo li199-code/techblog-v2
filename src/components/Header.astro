@@ -7,10 +7,10 @@ import { GLOBAL } from "@consts";
 const anyBlogPosts =
   (await getFilteredCollectionEntries("blog")).entries.length > 0;
 
-const anyTalks =
+const anyTalks = false &&
   (await getFilteredCollectionEntries("talks")).entries.length > 0;
 
-const anyProjects =
+const anyProjects = false &&
   (await getFilteredCollectionEntries("projects")).entries.length > 0;
 ---
 
