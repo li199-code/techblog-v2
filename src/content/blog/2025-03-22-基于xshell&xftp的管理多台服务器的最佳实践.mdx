@@ -1,0 +1,44 @@
+---
+title: "基于 xshell & xftp 的管理多台服务器的最佳实践"
+authors: Jason
+date: 2025-03-22
+description: "减少重复操作，提升效率"
+tags: [运维, 最佳实践]
+---
+
+import LinkCard from "../../components/LinkCard.astro";
+
+{/* truncate */}
+
+## 场景描述
+
+为了提升负载，把应用部署在多台服务器上。平时需求经常发生变更，导致代码文件需要经常上传到服务器上。我的开发机器是基于windows的，所以使用xshell和xftp来管理服务器。每次我修改完代码，都要执行两步操作：
+
+1. 把 codebase 中的文件复制到通过xftp打开的实时同步文件。
+2. 在 xshell 上重启应用。
+
+因为是两台服务器，所以以上两个命令每次都要执行两次，窗口切换频繁，没多久就被扰得不胜其烦。这个周末在家复盘了一下，整理出这种场景下最佳实践方案。
+
+## 同时上传最新文件到两台服务器上
+
+首先打开xftp，左边的本地窗口路径为codebase，右边打开两台服务器上代码文件所在的的目录。记得把两个服务器窗口split vertical，方便展示。
+
+![xftp](https://img.jasonleehere.com/202503222036408.png)
+
+然后，在改好文件后，在xftp的左边窗口右键文件，选择上传到所有会话。在弹出的提示框，选择行为是覆盖。
+
+![xftp](https://img.jasonleehere.com/202503221855568.png)
+
+这样，就能同时上传，且避免复制粘贴操作了。
+
+## 两台服务器同时执行命令
+
+上传完代码后，需要重启应用来让更新生效。点击view->compose->compose bar。
+
+![xshell](https://img.jasonleehere.com/202503221902755.png)
+
+下方会出现一个输入框，点击 to all sessions。
+
+![xshell](https://img.jasonleehere.com/202503222029658.png)
+
+这样，输入的命令就会同时在两台服务器上执行。
