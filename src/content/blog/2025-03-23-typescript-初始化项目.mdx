@@ -1,0 +1,66 @@
+---
+title: "TypeScript 初始化项目"
+authors: Jason
+date: 2025-03-23
+description: "typescript系列"
+tags: [TypeScript]
+---
+
+import LinkCard from "../../components/LinkCard.astro";
+
+{/* truncate */}
+
+## 初始化项目
+
+```bash
+npm init -y
+```
+
+## 安装依赖
+
+- TypeScript ：用于编译 .ts 文件。
+- ts-node ：用于直接运行TypeScript代码（开发时使用）。
+- @types/node ：提供Node.js 内置库 (e.g. fs, path) 的类型定义文件。
+
+```bash
+npm i -D typescript ts-node @types/node
+```
+
+## 初始化TypeScript配置文件
+
+```bash
+npx tsc --init
+```
+
+这将生成一个默认的 tsconfig.json 文件。你可以根据项目需求调整配置。例如：
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES6", // 目标ECMAScript版本
+    "module": "CommonJS", // 使用CommonJS模块机制（适合Node.js）
+    "strict": true, // 启用严格模式
+    "esModuleInterop": true, // 允许与CommonJS模块互操作
+    "outDir": "./dist", // 编译后的输出目录
+    "rootDir": "./src", // 源代码目录
+    "moduleResolution": "node" // 使用Node.js风格的模块解析
+  },
+  "include": ["src/**/*"], // 包含的文件
+  "exclude": ["node_modules"] // 排除的文件
+}
+```
+
+## 添加脚本到 package.json
+
+为了方便开发和构建项目，在 package.json 中添加一些常用脚本。
+
+```json
+{
+  "scripts": {
+    "build": "tsc", // 编译TypeScript代码
+    "start": "node dist/index.js", // 运行编译后的代码
+    "dev": "ts-node src/index.ts", // 开发模式：实时运行TypeScript代码
+    "clean": "rm -rf dist" // 清理编译输出目录，for windows: "rmdir /s /q dist"
+  }
+}
+```
