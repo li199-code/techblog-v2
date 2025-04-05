@@ -18,8 +18,8 @@ if (!title) {
 // 格式化当前日期为 YYYY-MM-DD
 const date = new Date().toISOString().split('T')[0];
 
-// 处理标题：将空格替换为短横线，并转换为小写
-const formattedTitle = title.trim().replace(/\s+/g, '-').toLowerCase();
+// 处理标题：将空格，中英文冒号替换为短横线，并转换为小写
+const formattedTitle = title.trim().replace(/\s+/g, '-').replace(/[:：]/g, '-').toLowerCase();
 
 // 定义frontmatter内容，添加slug字段
 const frontmatter = `---

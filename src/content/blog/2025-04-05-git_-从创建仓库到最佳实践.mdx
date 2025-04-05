@@ -1,0 +1,144 @@
+---
+title: "Git: 从创建仓库到最佳实践"
+authors: Jason
+date: 2025-04-05
+description: "git 常见场景"
+tags: [git]
+---
+
+import LinkCard from "../../components/LinkCard.astro";
+
+{/* truncate */}
+
+## 可视化和命令行
+
+以前我认为vscode等IDE让git避免命令行操作，一切都是点点按钮的事儿。最近发现在一些特殊场景下，比如在客户的服务器上，只能用ssh工具去连接，这时候想用git同步代码，就需要用命令行操作了。（因为是Nodejs项目，脚本语言嘛，源代码即发布版）
+
+## 初始化仓库
+
+建议每次在决定用git管理代码前，都问自己几个问题：
+
+1. 有远程git仓库了吗？（github/gitee/gitlab）
+2. 项目是否在其他电脑上存在不同版本？
+
+如果没有远程仓库，第一步请先创建一个远程仓库，然后初始化本地仓库。
+
+```bash
+git init
+git config --local user.name "xxx" // 可选，配置用户名
+git config --local user.email "xxx@xxx.com" // 可选，配置邮箱
+git add .
+git commit -m 'xxx'
+git remote add origin "git@github.com/xxx/xxx.git" // 走ssh方式
+git push -u origin master // u是upstream的意思
+```
+
+如果已经有远程仓库，且远程仓库已经包含最新改动，那么**不要**执行上述命令，直接备份本地代码，重新clone 远程仓库。clone的时候选择ssh方式，可以避免每次push/pull都需要输入密码。
+
+```
+ssh-keygen -t rsa
+cat ~/.ssh/id_rsa.pub // 复制到远程仓库的ssh配置中
+git clone git@github.com:xxx/xxx.git
+```
+
+如果有远程仓库，但是只有本地代码包含最新改动（这种情况发生在直接在服务器上修改代码，且之前没有被git管理），则强制推送到远程仓库：
+
+```bash
+... // 和上面的一样
+git push -f origin master
+```
+
+## 提交到远程仓库
+
+提交之前，先pull，把最新的改动拉下来。
+
+```bash
+git pull
+```
+
+如果落后于分支上的提交，新仓库第一次运行git pull，会提示：
+
+```
+[root@iZuf62ue5du3mofs71vwxmZ long]# git pull
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 3 (delta 1), reused 0 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 980 bytes | 980.00 KiB/s, done.
+From gitee.com:li199-code/long
+   fa19b63..dce8ba9  master     -> origin/master
+hint: You have divergent branches and need to specify how to reconcile them.
+hint: You can do so by running one of the following commands sometime before
+hint: your next pull:
+hint:
+hint:   git config pull.rebase false  # merge
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint:
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+fatal: Need to specify how to reconcile divergent branches.
+```
+
+让你选择是否用rebase模式来合并历史记录。rebase模式建议全局开启：
+
+```bash
+git config --global pull.rebase true
+```
+
+pull之后，如果出现冲突，参照下面小节的方法来解决。之后运行git push，即可完成提交。
+
+### 处理冲突
+
+pull是fetch + merge，如果出现冲突，则需要手动解决。运行git status，查看冲突文件，然后手动解决冲突。
+
+```
+[root@iZuf62ue5du3mofs71vwxmZ long]# git status
+interactive rebase in progress; onto dce8ba9
+Last command done (1 command done):
+   pick 6cfecf2 "222"
+No commands remaining.
+You are currently rebasing branch 'master' on 'dce8ba9'.
+  (fix conflicts and then run "git rebase --continue")
+  (use "git rebase --skip" to skip this patch)
+  (use "git rebase --abort" to check out the original branch)
+
+Unmerged paths:
+  (use "git restore --staged <file>..." to unstage)
+  (use "git add <file>..." to mark resolution)
+        both modified:   README.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+`both modified:   README.md`说明冲突文件是`README.md`。打开冲突文件，可以看到：
+
+```
+<<<<<<< HEAD
+这是你本地的改动
+=======
+这是远程的改动
+>>>>>>> <远程分支名>
+```
+
+提示处理好冲突后，运行
+
+```
+git add .
+git rebase --continue
+```
+
+即可完成合并。
+
+## 分支的创建与合并
+
+| Operation  | Command                                      |
+| ---------- | -------------------------------------------- |
+| 创建分支   | `git branch dev`                             |
+| 创建并切换 | `git checkout -b dev` 或 `git switch -c dev` |
+| 切换分支   | `git checkout dev` 或 `git switch dev`       |
+| 查看分支   | `git branch`                                 |
+| 合并分支   | `git rebase dev`（先切到目标分支）           |
+| 删除分支   | `git branch -d dev`                          |
