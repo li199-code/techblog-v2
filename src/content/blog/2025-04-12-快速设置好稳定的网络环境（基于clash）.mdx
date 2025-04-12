@@ -1,0 +1,58 @@
+---
+title: "快速设置好稳定的网络环境（基于Clash）"
+authors: Jason
+date: 2025-04-12
+description: "柏林墙终有倒塌的一天"
+tags: [clash]
+---
+import LinkCard from "../../components/LinkCard.astro";
+
+{/* truncate */}
+
+作为程序员，换电脑、多系统开发司空见惯。不仅查资料需要翻墙，git操作没有梯子也不行。今天就总结一下如何快速设置好稳定的网络环境。
+
+## 安装Clash
+
+1. 下载clash。[windows](https://pub-eac3eb5670f44f09984dee5c57939316.r2.dev/Clash.for.Windows.Setup.0.20.39.exe.zip)|[mac](https://pub-eac3eb5670f44f09984dee5c57939316.r2.dev/ClashX.dmg.zip)
+2. 安装，添加到启动项。（可选）
+3. 配置clash，参考[clash配置](https://agentneo.tech/doc/docs/tutorials/intro)。
+
+以上都是安装的GUI，linux脚本安装可以参考[clash-for-linux](https://github.com/wnlen/clash-for-linux)。
+
+## 命令行代理
+
+在GUI上配置好代理，打开代理开关后，就能在浏览器上用Google了。但是在命令行中执行命令，比如`npm install`, `git clone`等依旧受到墙的限制。clash的流量默认是通过7890端口转发的。可以通过运行以下命令来设置代理环境变量，将只在当前会话生效。最佳实践是每个会话运行一次，设置成全局可能会带来麻烦。
+
+### Windows
+
+```powershell
+# 设置代理环境变量
+$env:http_proxy = "http://127.0.0.1:7890"
+$env:https_proxy = "http://127.0.0.1:7890"
+
+# 取消代理环境变量
+Remove-Item Env:http_proxy
+Remove-Item Env:https_proxy
+
+# 验证是否生效
+curl.exe -I http://www.google.com
+```
+
+### macOS
+
+```bash
+# 设置代理环境变量
+export http_proxy=http://127.0.0.1:7890
+export https_proxy=http://127.0.0.1:7890
+
+# 取消代理环境变量
+unset http_proxy
+unset https_proxy
+
+# 验证是否生效
+curl -I http://www.google.com
+```
+
+
+
+
