@@ -1,0 +1,43 @@
+---
+title: "应用连接多数据库的技术选型"
+authors: Jason
+date: 2025-04-12
+description: "不想再吃连不上数据库的苦了"
+tags: [jdbc]
+---
+import LinkCard from "../../components/LinkCard.astro";
+
+{/* truncate */}
+
+## 问题背景
+
+我司主要做的是一款数据问答产品，应用部署在企业内网，对接的数据源可谓是五花八门。已知的数据库类型有：
+
+- MySQL
+- Oracle
+- SQL Server
+- PostgreSQL
+- ClickHouse
+- Impala
+- SAP Hana
+
+除了Mysql，PG这类主流数据库，还有Hana、impala这种冷门到不行的。以前代码都是通过在npm库驱动的基础上封装各种Class来支持连接不同数据库的。但是随着客户增加，使用场景越来越深入，我们发现了Nodejs在数据库连接方面的无力：
+
+- 很多npm库不是官方维护，而是来自社区，即使是主流数据库也不例外，如mysql的mysql2。
+- npm库的稳定性不强，有时会碰到莫名奇妙的错误，比如 mysql2 连接doris时，在一段时间后会断开连接。
+- 易用性差。比如 node-oracle 在连接11g以后的版本，强制需要instant-client，添加了非常多的维护成本。
+
+## 选型过程
+
+方案1：用一些ORM框架，如sequelize, typeorm。好处是还能继续用TS/JS实现，但是框架本身还是依赖npm库的，那么npm库的稳定性问题，还是需要解决。而且这两个orm框架能支持的数据库也很有限，完全不能满足需要。
+
+方案2：用JDBC，通过JDBC连接数据库，需要什么类型的数据库就添加对应的JDBC驱动。这样做有诸多好处：
+
+- 大部分的JDBC驱动都是官方支持，稳定性有保障。
+- JDBC支持的数据库类型非常多，几乎可以支持所有数据库。
+- oracle的jdbc天生不需要instant-client，极大减少维护成本。
+
+## 实现
+
+由于我们的应用是基于Nodejs的，要想利用JDBC的特性，还要写java代码。于是把数据库连接作为一个单独的服务抽离出来。把java项目起一个docker容器，通过RESTful接口暴露给Nodejs应用。Nodejs把sql传给java dbconnector服务，java dbconnector服务再把sql传给对应的JDBC驱动，最后把结果返回给Nodejs应用。
+
