@@ -21,7 +21,9 @@ import LinkCard from "../../components/LinkCard.astro";
 
 ## 同时上传最新文件到两台服务器上
 
-首先打开xftp，左边的本地窗口路径为codebase，右边打开两台服务器上代码文件所在的的目录。记得把两个服务器窗口split vertical，方便展示。
+有两种办法，一种是借助xftp等sftp工具，另一种是借助xshell的命令广播。
+
+1. 首先打开xftp，左边的本地窗口路径为codebase，右边打开两台服务器上代码文件所在的的目录。记得把两个服务器窗口split vertical，方便展示。
 
 ![xftp](https://img.jasonleehere.com/202503222036408.png)
 
@@ -31,9 +33,20 @@ import LinkCard from "../../components/LinkCard.astro";
 
 这样，就能同时上传，且避免复制粘贴操作了。
 
+2. xshell的命令广播
+
+有时候不想切换工具，就可以使用命令广播。首先用工具 -> 发送键输入到 -> 所有会话。然后在任意一个窗口运行`vi`, 同时修改文件内容即可。
+
 ## 两台服务器同时执行命令
 
-上传完代码后，需要重启应用来让更新生效。点击view->compose->compose bar。
+上传完代码后，需要重启应用来让更新生效。有两种同时执行命令的办法：
+
+1. 工具 -> 发送键输入到 -> 所有会话
+
+每一个会话的顶部会出现 “是否接收全部键输入”，关闭后这个会话就不会受到全局输入的影响。这种方法相比于下面的撰写，好处是可以通过上下方向键查看历史记录。
+
+
+2. 点击view->compose->compose bar。
 
 ![xshell](https://img.jasonleehere.com/202503221902755.png)
 
