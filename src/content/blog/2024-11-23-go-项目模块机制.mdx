@@ -1,5 +1,5 @@
 ---
-title: "Go 项目模块机制"
+title: "Golang 安装、初始化项目和模块机制"
 authors: Jason
 date: 2024-11-23
 description: "Go模块机制，重点讲import相关用法"
@@ -12,13 +12,17 @@ import LinkCard from "../../components/LinkCard.astro";
 
 {/* truncate */}
 
+## Go 安装
+
+windows下安装go，需要去官网下载一个msi文件，然后一路点击下一步。最后在新的终端内运行`go version`，可以查看当前安装的版本。
+
 ## GOPATH 和 Go Module
 
 windows 安装 Go 时，有一个步骤是设置 GOPATH 环境变量，值是工作空间路径，默认可以设置为 `C:\Users\<用户名>\go`。早期版本，Go 项目只能放在 GOPATH 目录下。从 1.13 版本开始，Go Mudules 成为默认的依赖管理方式。Modules 规定了内部模块的命名和依赖、项目版本管理和外部依赖。如果项目使用 Go Modules，GOPATH 主要用于存放下载的依赖包（缓存）等内容。
 
-## 使用 Go Modules 的步骤
+## 初始化项目
 
-#### 1. 初始化 Go Modules
+#### 1. 用go modules初始化
 
 在项目的根目录下运行以下命令：
 
