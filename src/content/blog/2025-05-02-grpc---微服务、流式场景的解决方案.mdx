@@ -1,0 +1,149 @@
+---
+title: "grpc - 微服务、流式场景的解决方案"
+authors: Jason
+date: 2025-05-02
+description: "grpc入门"
+tags: [grpc]
+---
+
+import LinkCard from "../../components/LinkCard.astro";
+
+{/* truncate */}
+
+最近工作项目中，有把数据连接功能单独抽出作为微服务的需求，于是想到了grpc作为服务间通信的解决方案。
+
+rpc 是远程过程调用的缩写，是一种用于在分布式系统中进行远程调用的协议。它允许客户端通过网络调用服务端提供的方法，而不需要了解底层的网络细节和通信协议。grpc 是 Google 推出的一个 RPC 框架，它提供了一种更 efficient 和安全的通信方式，比 HTTP/1.1 更安全，更快，更轻量。
+
+## protobuf 和 grpc 的关系
+
+✅ Protocol Buffers（Protobuf）
+
+- 是一种数据序列化格式 ，就像 JSON 或 XML，但更小、更快、更高效。
+- 用 .proto 文件定义数据结构（消息）和服务接口。
+- 可以跨语言使用：你可以用 Python 定义一个消息结构，然后在 Java 或 Go 中使用。
+
+✅ gRPC
+
+- 是一个远程调用框架（RPC） ，用来让两个程序通过网络通信。
+- 它利用 Protobuf 来：
+- 定义服务接口（哪些方法可以调用）
+- 序列化传输的数据（发送和接收的数据长什么样）
+
+## 基于 Nodejs 的 grpc 示例
+
+1. 初始化项目
+
+```bash
+npm init -y
+npm install @grpc/grpc-js @grpc/proto-loader express body-parser
+```
+
+2. 定义 proto 文件
+
+```proto
+// proto/hello.proto
+syntax = "proto3";
+
+package greet;
+
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}
+```
+
+3. client/server
+
+client.js:
+
+```js
+const grpc = require("@grpc/grpc-js");
+const protoLoader = require("@grpc/proto-loader");
+const path = require("path");
+
+// 加载 proto 文件
+const PROTO_PATH = path.join(__dirname, "proto", "hello.proto");
+const packageDefinition = protoLoader.loadSync(PROTO_PATH);
+const helloProto = grpc.loadPackageDefinition(packageDefinition).greet;
+
+// 创建客户端
+const client = new helloProto.Greeter(
+  "localhost:50051",
+  grpc.credentials.createInsecure(),
+);
+
+// 调用服务
+function runClient() {
+  const user = "Alice";
+
+  client.SayHello({ name: user }, (error, response) => {
+    if (error) {
+      return console.error(error);
+    }
+    console.log("Response from server:", response.message);
+  });
+}
+
+runClient();
+```
+
+server.js
+
+```js
+const grpc = require("@grpc/grpc-js");
+const protoLoader = require("@grpc/proto-loader");
+const path = require("path");
+
+// 加载 proto 文件
+const PROTO_PATH = path.join(__dirname, "proto", "hello.proto");
+const packageDefinition = protoLoader.loadSync(PROTO_PATH);
+const helloProto = grpc.loadPackageDefinition(packageDefinition).greet;
+
+// 实现服务方法
+const sayHello = (call, callback) => {
+  const { name } = call.request;
+  const message = `Hello from server, ${name}!`;
+  callback(null, { message });
+};
+
+// 创建服务
+function main() {
+  const server = new grpc.Server();
+  server.addService(helloProto.Greeter.service, { SayHello: sayHello });
+
+  const port = "0.0.0.0:50051";
+  server.bindAsync(port, grpc.ServerCredentials.createInsecure(), () => {
+    console.log(`gRPC server running at ${port}`);
+    server.start();
+  });
+}
+
+main();
+```
+
+4. 运行服务
+
+```bash
+node server.js
+node client.js //  在 another terminal
+```
+
+5. 运行结果
+
+```bash
+gRPC server running at 0.0.0.0:50051
+Response from server: Hello from server, Alice!
+```
+
+说明：proto文件定义了service Greeter，其中包含一个名为SayHello的方法，该方法接受一个HelloRequest对象作为参数，并返回一个HelloReply对象。server.js实现了这个方法，并创建了一个gRPC服务器，并绑定了50051端口。client.js是通过`client.SayHello`调用的，传入参数是name（proto规定的），也就是说 proto 起到一个接口文档的作用。
+
+## 其他
+
+grpc 不支持浏览器调用（或者说很麻烦），除了上面这种命令行调用，还可以用apifox来调试grpc服务。
