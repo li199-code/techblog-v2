@@ -29,9 +29,8 @@ date: ${date}
 description: "这里写描述"
 tags: []
 ---
-import LinkCard from "../../components/LinkCard.astro";
-
-{/* truncate */}
+import LinkCard from "@components/LinkCard.astro";
+import Callout from "@components/Callout.astro";
 `;
 
 // 文件名格式：YYYY-MM-DD-title.mdx

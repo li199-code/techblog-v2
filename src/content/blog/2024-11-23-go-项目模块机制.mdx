@@ -7,6 +7,7 @@ tags: [Go]
 ---
 
 import LinkCard from "../../components/LinkCard.astro";
+import Callout from "@components/Callout.astro";
 
 掌握任何一个真实项目，必然要以熟悉编程语言的模块系统为前提。Go 的模块系统有一些独特之处，在这里做一下完整记录。
 
@@ -84,6 +85,14 @@ go mod tidy
 ```
 
 这会更新 `go.mod` 并生成一个 `go.sum` 文件，用于下载的校验。
+
+<Callout type="info">
+  <div>
+    <p>go.mod: 项目的依赖清单和模块定义。类似于package.json</p>
+    <p>go.sum: 依赖校验文件（安全性 + 一致性）。类似于package-lock.json</p>
+    都可以自动生成。
+  </div>
+</Callout>
 
 #### 4. 编译和运行项目
 
