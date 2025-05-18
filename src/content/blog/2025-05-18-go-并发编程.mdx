@@ -1,0 +1,261 @@
+---
+title: "Go 并发编程"
+authors: Jason
+date: 2025-05-18
+description: "Go 并发编程写法"
+tags: [Go, 并发]
+---
+
+import LinkCard from "@components/LinkCard.astro";
+import Callout from "@components/Callout.astro";
+
+You:
+
+go 并发编程写法
+
+ChatGPT:
+
+Go（Golang）是为并发编程而生的语言，内建对并发的原生支持，主要通过以下几个核心机制来实现：
+
+- goroutine（轻量线程）
+
+- channel（通信机制）
+
+- select（监听多个channel）
+
+- sync 包（同步原语，如 Mutex、WaitGroup 等）
+
+下面通过例子逐一讲解这些核心机制的写法。
+
+---
+
+## 1. 启动 goroutine
+
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func say(msg string) {
+    for i := 0; i < 3; i++ {
+        fmt.Println(msg)
+        time.Sleep(time.Millisecond * 500)
+    }
+}
+
+func main() {
+    go say("Hello")     // 开一个 goroutine
+    say("World")        // 主线程执行
+}
+```
+
+输出结果是交错的，因为 `say("Hello")` 是在一个 goroutine 中异步执行的。
+
+---
+
+## 2. 使用 channel 通信
+
+```go
+package main
+
+import "fmt"
+
+func sum(a []int, c chan int) {
+    total := 0
+    for _, v := range a {
+        total += v
+    }
+    c <- total // 将结果发送到 channel
+}
+
+func main() {
+    a := []int{1, 2, 3, 4, 5}
+    c := make(chan int)
+
+    go sum(a[:len(a)/2], c)
+    go sum(a[len(a)/2:], c)
+
+    x, y := <-c, <-c // 接收两个结果
+    fmt.Println(x, y, x+y)
+}
+```
+
+---
+
+3. 使用 `select` 多路复用
+
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    c1 := make(chan string)
+    c2 := make(chan string)
+
+    go func() {
+        time.Sleep(1 * time.Second)
+        c1 <- "from c1"
+    }()
+    go func() {
+        time.Sleep(2 * time.Second)
+        c2 <- "from c2"
+    }()
+
+    for i := 0; i < 2; i++ {
+        select {
+        case msg1 := <-c1:
+            fmt.Println("Received:", msg1)
+        case msg2 := <-c2:
+            fmt.Println("Received:", msg2)
+        }
+    }
+}
+```
+
+---
+
+## 4. 使用 WaitGroup 同步
+
+```go
+package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+func worker(id int, wg *sync.WaitGroup) {
+    defer wg.Done() // 每完成一个任务就减1
+    fmt.Printf("Worker %d starting\n", id)
+    // 模拟工作
+    fmt.Printf("Worker %d done\n", id)
+}
+
+func main() {
+    var wg sync.WaitGroup
+
+    for i := 1; i <= 3; i++ {
+        wg.Add(1)
+        go worker(i, &wg)
+    }
+
+    wg.Wait() // 阻塞直到所有 goroutine 完成
+    fmt.Println("All workers done")
+}
+```
+
+---
+
+## 5. 使用 Mutex 保护共享资源
+
+```go
+package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+type Counter struct {
+    mu sync.Mutex
+    val int
+}
+
+func (c *Counter) Inc() {
+    c.mu.Lock()
+    defer c.mu.Unlock()
+    c.val++
+}
+
+func (c *Counter) Value() int {
+    c.mu.Lock()
+    defer c.mu.Unlock()
+    return c.val
+}
+
+func main() {
+    c := &Counter{}
+    var wg sync.WaitGroup
+
+    for i := 0; i < 1000; i++ {
+        wg.Add(1)
+        go func() {
+            defer wg.Done()
+            c.Inc()
+        }()
+    }
+
+    wg.Wait()
+    fmt.Println("Final Counter:", c.Value())
+}
+```
+
+---
+
+## 总结：并发写法关键点
+
+| 功能         | 写法简述                             |
+| ------------ | ------------------------------------ |
+| 启动协程     | go func()                            |
+| 创建通道     | ch := make(chan int)                 |
+| 通信         | `ch <- x（发送），x := <-ch（接收）` |
+| 等待多个协程 | sync.WaitGroup                       |
+| 数据保护     | sync.Mutex                           |
+| 多通道选择   | `select { case ... }     `           |
+
+---
+
+You:
+
+```go
+func hello() {
+fmt.Println("Hello Goroutine!")
+}
+func main() {
+go hello()
+fmt.Println("main goroutine done!")
+time.Sleep(time.Second)
+}
+```
+
+假如我不想用time.Sleep来保证hello被执行，还有什么别的办法
+
+ChatGPT:
+
+是的，不推荐使用 `time.Sleep` 来等待 goroutine 完成，这种方式既不可靠也不优雅。更合理的方式是使用 `sync.WaitGroup`\*\* ，它专门用来等待一组 goroutine 完成。
+
+---
+
+✅ 使用 `sync.WaitGroup` 的写法如下：
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func hello(wg *sync.WaitGroup) {
+	defer wg.Done() // goroutine 完成时调用 Done
+	fmt.Println("Hello Goroutine!")
+}
+
+func main() {
+	var wg sync.WaitGroup
+	wg.Add(1) // 表示有一个 goroutine 要等待
+
+	go hello(&wg)
+
+	fmt.Println("main goroutine waiting...")
+	wg.Wait() // 等待所有 goroutine 结束
+	fmt.Println("main goroutine done!")
+}
+```
