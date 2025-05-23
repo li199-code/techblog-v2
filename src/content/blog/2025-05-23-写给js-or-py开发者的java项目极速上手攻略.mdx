@@ -1,0 +1,53 @@
+---
+title: "写给JS or Py开发者的Java项目极速上手攻略"
+authors: Jason
+date: 2025-05-23
+description: "这里写描述"
+tags: []
+---
+import LinkCard from "@components/LinkCard.astro";
+import Callout from "@components/Callout.astro";
+
+工作语言一直是Js/Ts，但是项目中遇到一个微服务需求，是用Java做的。具体是多数据库连接，考虑到JDBC在数据库驱动这块的绝对统治地位，Java也就成为了唯一的选择。
+
+首先谈谈Java代码文件的执行方式。Java 11之后的版本，都支持直接运行`java demo.java`，只要代码内有psvm作为入口。然后了解Java项目的结构和启动机制。有两种包管理器，Maven和Gradle。本次以maven为例。安装好Java 17和maven之后，初始化命令：
+
+```bash
+mvn archetype:generate -DgroupId=com.example.hello \
+                       -DartifactId=hello-app \
+                       -DarchetypeArtifactId=maven-archetype-quickstart \
+                       -DinteractiveMode=false
+```
+
+项目结构为：
+
+```
+hello-app/
+├── pom.xml
+└── src/
+    ├── main/
+    │   └── java/
+    │       └── com/example/hello/App.java
+    └── test/
+        └── java/
+            └── com/example/hello/AppTest.java
+```
+
+其中，pom.xml为项目配置文件，App.java为项目入口文件，AppTest.java为测试文件。项目命令为：
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.hello.App" // 编译并运行，编译产物 .class文件 放在target文件夹
+```
+
+运行上述exec还需要修改pom文件，添加插件，这里不赘述。另外，mvn会把所有的依赖包都下载到本地仓库，下次运行时，会从本地仓库中读取依赖包。本地仓库位置一般在`~/.m2/repository`下。
+
+所以，如果需要新增一个单独执行的主文件，需要放在src/xx/xx下，然后运行命令`mvn exec:java -Dexec.mainClass="com.example.xx.xx"`。
+
+上面其实介绍都是基于exec插件的启动方式。此外还有打包jar文件的方式：
+
+```bash
+mvn clean package
+java -cp target/hello-app-1.0-SNAPSHOT.jar com.example.hello.App
+```
+
+spingboot项目，直接运行`mvn spring-boot:run`即可。
