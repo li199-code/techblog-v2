@@ -1,0 +1,73 @@
+---
+title: "Nodejs项目性能优化技巧（数据结构和并发请求等）"
+authors: Jason
+date: 2025-05-27
+description: "一次性能优化技巧总结"
+tags: []
+---
+import LinkCard from "@components/LinkCard.astro";
+import Callout from "@components/Callout.astro";
+
+## 背景
+
+接口的响应时间非常长，直到超时。排查原因，一种是sql串行查询，一种是sql查询返回的数据量大之后，在内存操作过程很慢。
+
+## 优化思路
+
+单机优化方向：避免同步阻塞代码，缓存热点数据，并发执行异步任务等。
+
+分布式优化方向：微服务架构，增加机器（容器编排）
+
+### sql请求并发优化
+
+该接口涉及sql串行查询，适用于Promise.all(). Promise.all()方法接收一个数组，数组中的每个元素都是Promise对象，Promise.all()方法返回一个Promise对象，只有当数组中的所有Promise对象都成功时，才会成功，只要有一个失败，就会失败。然后所有请求是并发执行的。最慢的那个请求时长就等于Promise.all的时长。
+
+### 避免同步阻塞代码
+
+接口拿到数据后，需要在内存中经过一步合并操作，方法代码是：
+
+```js
+const slowMergeBy = (_id, arrays) => {
+  const merged = [];
+  arrays.forEach(array => {
+    array.forEach(i => {
+      const hit = merged.findIndex(m => m[_id] === i[_id]);
+      if (hit >= 0) {
+        merged[hit] = Object.assign({}, merged[hit], i);
+      } else {
+        merged.push(i);
+      }
+    });
+  });
+  return merged;
+};
+```
+
+分析复杂度后发现，方法的时间复杂度是O(n^2)，n为二维数组展平后的长度。这是因为，findIndex()的复杂度是O(n)，而数组的forEach()方法复杂度是O(n)，所以整个方法复杂度是O(n^2)。所以突破口是查找这一步骤。ES6提供了Map数据结构，它可以保证查找的复杂度是O(1)，所以可以替换findIndex()方法。改进后的方法代码是：
+
+```js
+const fastMergeBy = (_id, arrays) => {
+  const map = new Map();
+  for (const array of arrays) {
+    for (const item of array) {
+      const key = item[_id];
+      if (!map.has(key)) {
+        map.set(key, { ...item });
+      } else {
+        Object.assign(map.get(key), item);
+      }
+    }
+  }
+  return Array.from(map.values());
+};
+```
+
+benchmark测试结果显示：fastMergeBy()方法比slowMergeBy()方法快了100倍左右。
+
+## 总结
+
+串行的异步任务，且相互独立的，可以走并发来减少阻塞时间。
+
+涉及在内存中操作大量数据的方法，要分析方法的时间复杂度，选择合适的数据结构（及其背后的算法）。
+
+
