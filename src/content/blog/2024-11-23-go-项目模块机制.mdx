@@ -94,6 +94,12 @@ go mod tidy
   </div>
 </Callout>
 
+<Callout type="info">
+  <div>
+    如果是从git新拉取到本地的项目，第一步执行go mod download，这样仅下载依赖，而不会修改mod/sum。（有时候mod/sum明明没改动也会出现在git changes）
+  </div>
+</Callout>
+
 #### 4. 编译和运行项目
 
 运行项目时，Go 会自动处理依赖：
@@ -125,6 +131,46 @@ go get -u <dependency-name>@version
 ```
 
 `go get`也会自动更新`go.mod`和`go.sum`。
+
+<Callout type="info">
+  <div>
+     go get 和 go install 区别：go get	添加/升级依赖模块（用于 go.mod， 针对当前项目）；go install	安装可执行程序（到 $GOBIN，命令行工具，一般是go编译出的二进制文件，如usql）
+  </div>
+</Callout>
+
+## VSCode调试go项目
+
+1. 安装插件：
+
+打开 VSCode，安装插件：Go（by Go Team at Google）
+
+2. 安装调试器（首次打开调试会提示自动安装 dlv）：
+
+```bash
+go install github.com/go-delve/delve/cmd/dlv@latest
+```
+
+3. 添加调试配置：
+在 .vscode/launch.json 中添加以下内容（可以由 VSCode 自动生成）：
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}",
+      "env": {},
+      "args": []
+    }
+  ]
+}
+```
+
+4. 设置断点，点击左侧调试图标 ▶️，选择 Debug 运行即可。
 
 ## init 函数和 import
 
