@@ -1,0 +1,91 @@
+---
+title: "基于pm2的Nodejs多进程服务通信方案"
+authors: Jason
+date: 2025-06-12
+description: "ipc 通信"
+tags: [多进程, pm2]
+---
+import LinkCard from "@components/LinkCard.astro";
+import Callout from "@components/Callout.astro";
+
+
+一个需求：应用的配置更新后，希望能自动重连数据库，我们在代码里已经写了配置更新逻辑，但是重启应用需要手动操作，比较麻烦。细究之下，我们应用是运行在 pm2 的多进程模式下，应用每次更新配置的重连只在当前的进程中进行，而其他的进程则没有反应。pm2 提供了 ipc 通信机制，我们可以利用这个机制，实现配置更新后自动重启应用。
+
+一开始，我的代码逻辑是，在每个节点上监听一个消息，当收到消息时，执行相应的函数。
+
+```js
+// src/server.js 中某个初始化位置添加：
+process.on('message', (msg) => {
+  if (msg && msg.type === 'config:update') {
+    console.log(`Worker ${process.pid} received config update`);
+    updateConfig(); // 你定义的函数
+  }
+});
+
+function updateConfig() {
+  // 执行你需要运行的几个函数
+  console.log(`Worker ${process.pid} is updating config...`);
+  // ...
+}
+```
+
+更新配置时，广播消息：
+
+```js
+// 假设这个请求路由触发配置更新
+app.post('/update-config', (req, res) => {
+  const config = req.body;
+
+  // 执行当前进程的函数
+  updateConfig();
+
+  // 广播给其他进程（包括自己）
+  if (process.send) {
+    process.send({ type: 'config:update' });
+  }
+
+  res.send({ status: 'broadcasted' });
+});
+```
+
+但是，我发现无论如何，process.on 监听不到任何消息。可能的原因是，这种方式需要经过pm2父进程转发，而pm2父进程对消息格式有要求，不满足的不会转发。AI推荐我用pm2 js sdk的单独通知某个进程的方法来实现广播。
+
+```js
+const pm2 = require('pm2');
+
+function broadcastConfigUpdate() {
+  pm2.connect(function (err) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    pm2.list((err, list) => {
+      if (err) return console.error(err);
+
+      const targets = list.filter(proc => p.pid !== process.pid); //  过滤掉当前进程
+
+      for (const proc of targets) {
+        pm2.sendDataToProcessId( // 单独通知的接口
+          proc.pm_id,
+          {
+            type: 'process:msg',
+            data: { type: 'config:update' },
+            id: proc.pm_id,
+            topic: 'config:update'
+          },
+          (err, res) => {
+            if (err) console.error(err);
+          }
+        );
+      }
+
+      pm2.disconnect();
+    });
+  });
+}
+```
+
+最后说一下，可以通知的进程范围是pm2所创建管理的进程，即pm2.list()返回的进程列表。
+
+
