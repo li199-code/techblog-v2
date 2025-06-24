@@ -7,6 +7,7 @@ tags: [git]
 ---
 
 import LinkCard from "../../components/LinkCard.astro";
+import Callout from "@components/Callout.astro";
 
 {/* truncate */}
 
@@ -142,3 +143,30 @@ git rebase --continue
 | 查看分支   | `git branch`                                 |
 | 合并分支   | `git rebase dev`（先切到目标分支）           |
 | 删除分支   | `git branch -d dev`                          |
+
+如果用rebase模式，有如下最佳实践：
+
+```
+# 切换到 master 分支
+git checkout master
+
+# 确保 master 是最新的（从远程拉取最新代码）
+git pull origin master
+
+git checkout feat
+git rebase master  # 把 master 的最新提交合并进 feat
+
+# 这中间会有冲突，借助GUI工具解决冲突。每解决一次冲突，就把解决好的文件 add 到暂存区，然后运行 git rebase --continue
+
+# 然后回到 master 再合并
+git checkout master
+git merge feat     # 因为已经 rebase，所以通常是 fast-forward 合并
+git push origin master
+```
+
+<Callout type="info">
+  <div>
+   <p>为什么要先把master的最新提交合并进feat？</p>
+   <p>把 master 的最新提交合并进 feat（或 rebase 到 feat 上）可以避免将来在合并 feat 到 master 时产生冲突，确保代码是基于最新版本开发的。在开发中，应在 feat 分支中定期 git merge master 或 git rebase master。</p>
+  </div>
+</Callout>
