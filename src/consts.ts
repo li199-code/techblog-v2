@@ -16,7 +16,7 @@ export const GLOBAL: GlobalSite = {
   title: "Jason Lee",
   description: "I do cool stuff.",
   author: "Jason Lee",
-  authorPhotoSrc: "/jasonlee.jpg",
+  authorPhotoSrc: "/selfie1.jpg",
   // logo: {
   //   darkThemeSrc: "/logo/logo_dark.png",
   //   lightThemeSrc: "/logo/logo_light.png",
