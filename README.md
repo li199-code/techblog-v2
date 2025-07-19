@@ -26,7 +26,7 @@ https://jasonleehere.com/feed.xml
   to make framework components interactive.
 </Callout>
 
-<Callout type="warning"> 或者warning
+<Callout type="warning"> 或者info
 This doesn't work if the website is hosted with a base path (in `astro.config.mjs`).
 </Callout>
 
