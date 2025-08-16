@@ -1,4 +1,4 @@
-export type CollectionName = "blog" | "projects" | "talks";
+export type CollectionName = "blog" | "projects" | "talks" | "FIRE";
 
 
 export type GlobalSite = {
@@ -60,6 +60,10 @@ export const PROJECTS: CollectionSite = {
 };
 
 export const TALKS: CollectionSite = {
+  pageSize: 10,
+};
+
+export const FIRE: CollectionSite = {
   pageSize: 10,
 };
 

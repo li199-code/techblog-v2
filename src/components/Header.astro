@@ -12,6 +12,9 @@ const anyTalks = false &&
 
 const anyProjects = 
   (await getFilteredCollectionEntries("projects")).entries.length > 0;
+
+const anyFIRE = 
+  (await getFilteredCollectionEntries("FIRE")).entries.length > 0;
 ---
 
 <header transition:persist>
@@ -57,6 +60,16 @@ const anyProjects =
               <span>{`|`}</span>
               <TextLink href={resolvePath("/projects", Astro.url.pathname)}>
                 projects
+              </TextLink>
+            </>
+          )
+        }
+        {
+          anyFIRE && (
+            <>
+              <span>{`|`}</span>
+              <TextLink href={resolvePath("/FIRE", Astro.url.pathname)}>
+                FIRE
               </TextLink>
             </>
           )
