@@ -1,0 +1,176 @@
+---
+title: "npm 安全漏洞修复方法整理"
+authors: Jason
+date: 2025-09-02
+description: "漏洞修复"
+tags: ["npm", "安全"]
+---
+
+import LinkCard from "@components/LinkCard.astro";
+import Callout from "@components/Callout.astro";
+
+## 背景
+
+部署在不同客户环境的项目，经常会面临安全扫描的要求，特别是在金融场景，客户对安全要求较高。不仅对源代码进行扫描，还会对依赖项进行扫描。比如说这次，源代码检测出来一些明文密码和弱加密方式，这些尚且好改。npm依赖扫描出来好几十个包有安全风险，着实让人头大。我把难点总结如下：
+
+1. 依赖可分为直接依赖和间接依赖，也就是npm module下面的module。这类不能通过dependency来修改。
+2. 很多依赖停止维护，即使是最新版本仍然有漏洞。
+3. 提升版本的跨度太大，可能会导致项目运行异常。
+
+## npm module层级（前置知识）
+
+### 1. 传统 npm (&lt; v3)
+
+
+每个依赖会把它自己的依赖安装在 **自己目录下的 node_modules** 中，所以目录会非常深：
+
+
+```markdown
+project/
+  node_modules/
+    foo/
+      node_modules/
+        bar/
+          node_modules/
+            baz/
+
+```
+
+这种情况会导致 `node_modules` 套娃式嵌套，非常深。
+
+
+
+### 2. npm v3+ (扁平化安装)
+
+
+从 `npm@3` 开始，`npm` 尽量把依赖扁平化，安装在顶层的 `node_modules` 里，只要版本能兼容。
+
+
+比如：
+
+
+```json
+{
+  "dependencies": {
+    "foo": "^1.0.0"
+  }
+}
+
+```
+
+假设 `foo` 依赖 `bar@^2.0.0`，最终目录可能是：
+
+
+```
+project/
+  node_modules/
+    foo/
+    bar/
+
+```
+
+但如果出现 **版本冲突**，比如：
+
+
+- 你的项目依赖 `bar@1.x`
+- `foo` 依赖 `bar@2.x`
+
+那 `npm` 会在 `foo/node_modules/` 里再装一份：
+
+
+```graphql
+project/
+  node_modules/
+    bar@1.x
+    foo/
+      node_modules/
+        bar@2.x
+
+```
+
+
+### 3. 确认依赖的依赖位置
+
+
+你可以用以下命令查看：
+
+
+- **查看树状结构**
+
+```bash
+npm ls 包名;
+
+```
+会显示某个包在 `node_modules` 里的完整依赖树。
+
+
+
+
+## npm audit
+
+npm audit是npm的一个命令，用于检查项目的依赖是否有安全漏洞。
+
+`npm audit fix` 的内部原理，其实就是在 **读取安全审计结果** 的基础上，自动尝试调整 `package.json` 和 `package-lock.json`（或 `npm-shrinkwrap.json`），然后重新安装依赖。具体过程大致分为几个阶段：
+
+### 🔍 1. 审计依赖树
+
+
+- `npm audit` 会把项目的 `package-lock.json`（或 `npm-shrinkwrap.json`）上传到 npm 的安全漏洞数据库（npm Registry 的 advisory API）。
+- 服务器返回一份 JSON 报告，说明哪些包、哪些版本存在安全漏洞，以及可用的安全修复版本。
+
+
+### 🔧 2. 修复策略
+
+1. **只修改 package-lock.json / npm-shrinkwrap.json**
+
+- 如果某个漏洞依赖是“依赖的依赖”，并且在不改动 `package.json` 的情况下就能升级到安全版本（即 semver 范围允许），`npm audit fix` 就直接在 lock 文件里把版本号更新到安全版本。
+- 这类修复不会影响 `package.json`，所以算是“无痛升级”。
+
+
+### ⚠️ 3. 限制
+
+
+- `npm audit fix` 只会做 **非破坏性** 的升级（即 semver 允许范围内的升级）。
+- 如果漏洞修复需要 **大版本升级（breaking changes）**，`npm audit fix` 默认不会修改，除非你加上：
+
+```bash
+npm audit fix --force
+
+```
+这可能会直接升级到最新大版本，潜在引入不兼容问题。
+
+## 手动修复方法
+
+情景从易到难：
+
+1. 直接依赖
+
+改dependencies的版本号即可。
+
+2. 间接依赖
+
+在package.json中添加overrides字段，指定依赖的版本号。
+
+```json
+{
+  "overrides": {
+    "bar": "2.0.0"
+  }
+}
+```
+
+3. 停止维护的依赖
+
+第一，通过npm ls查看他是不是其他包的依赖，如果是，就尝试把用到他的依赖的版本升到最新。
+
+第二，google一下”包名 + vulnerability”，看看有没有修复的版本。就比如xlsx，npm上最近更新是两年前。后续查了才知道，xlsx和npm打官司，于是停止在npm上更新，转而在自己的cdn上托管。我把dependencies的xlsx改为cdn地址，才解决问题。
+
+第三，如果是间接依赖的问题，也可以fork依赖，修改源代码，自己在npm上发布一个新的版本。
+
+3. 版本跨度太大的依赖
+
+更新的依赖，可能会变更方法的参数、返回值、行为等，造成应用crash。这时候需要全面测试。
+
+## 总结
+
+先用`npm run audit`检查一下，看看有哪些依赖有问题。然后用`npm run audit fix`和`npm run audit fix --force`修复。剩下的靠上述方法手动替换。
