@@ -3,7 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
 import { HOME, GLOBAL, type CollectionName } from "@consts";
 import BlogCardButton from "@components/BlogCardButton.astro";
-import ProjectCardButton from "@components/ProjectCardButton.astro";
+import FireCardButton from "@components/FireCardButton.astro";
 import TalkCardButton from "@components/TalkCardButton.astro";
 import TextLink from "@components/TextLink.astro";
 import type { CollectionEntry } from "astro:content";
@@ -22,9 +22,9 @@ async function getCollectionEntries<T extends CollectionName>(
 
 const blog = await getCollectionEntries("blog", HOME.blogEntries ?? 0);
 
-const projects = await getCollectionEntries(
-  "projects",
-  HOME.projectEntries ?? 0,
+const firePosts = await getCollectionEntries(
+  "FIRE",
+  HOME.fireEntries ?? 0,
 );
 
 const talks = await getCollectionEntries("talks", HOME.talkEntries ?? 0);
@@ -94,18 +94,18 @@ const talks = await getCollectionEntries("talks", HOME.talkEntries ?? 0);
           )
         }
         {
-          projects.length > 0 && (
+          firePosts.length > 0 && (
             <section class="animate space-y-6">
               <div class="flex flex-wrap items-center justify-between gap-y-2">
                 <h2 class="font-semibold text-black dark:text-white">
-                  Recent projects
+                  Recent FIRE posts
                 </h2>
-                <TextLink href="projects">all projects </TextLink>
+                <TextLink href="FIRE">all FIRE posts </TextLink>
               </div>
               <ul class="not-prose flex flex-col gap-4">
-                {projects.map((project) => (
+                {firePosts.map((post) => (
                   <li>
-                    <ProjectCardButton entry={project} />
+                    <FireCardButton entry={post} />
                   </li>
                 ))}
               </ul>

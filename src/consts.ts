@@ -31,12 +31,14 @@ type CollectionSite =  {
 type HomeSite =  {
   blogEntries?: number;
   projectEntries?: number;
+  fireEntries?: number;
   talkEntries?: number;
 }
 
 export const HOME: HomeSite = {
   blogEntries: 5,
   projectEntries: 3,
+  fireEntries: 5,
   talkEntries: 3,
 };
 
