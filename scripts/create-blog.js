@@ -9,13 +9,20 @@ const __dirname = path.dirname(__filename);
 // 获取命令行参数
 const args = process.argv.slice(2);
 
+// 格式化当前日期为 YYYY-MM-DD
+const date = new Date().toISOString().split('T')[0];
+
 let directory = 'blog'; // 默认目录
 let title;
 
 // 判断参数数量，支持两种格式：
 // 1. npm run new "title" - 默认创建到 blog 目录
 // 2. npm run new directory "title" - 创建到指定目录
-if (args.length === 1) {
+// 3. npm run new daily - 在 daily 目录创建当天的日志
+if (args.length === 1 && args[0] === 'daily') {
+  directory = 'daily';
+  title = date.replace(/-/g, '');
+} else if (args.length === 1) {
   title = args[0];
 } else if (args.length >= 2) {
   directory = args[0];
@@ -26,9 +33,6 @@ if (args.length === 1) {
   console.error("示例: npm run new \"我的文章\" 或 npm run new others \"我的文章\"");
   process.exit(1);
 }
-
-// 格式化当前日期为 YYYY-MM-DD
-const date = new Date().toISOString().split('T')[0];
 
 // 处理标题：将空格，中英文冒号替换为短横线，并转换为小写
 const formattedTitle = title.trim().replace(/\s+/g, '-').replace(/[:：]/g, '-').toLowerCase();
