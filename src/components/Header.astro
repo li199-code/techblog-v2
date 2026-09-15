@@ -7,17 +7,8 @@ import { GLOBAL } from "@consts";
 const anyBlogPosts =
   (await getFilteredCollectionEntries("blog")).entries.length > 0;
 
-const anyTalks = false &&
-  (await getFilteredCollectionEntries("talks")).entries.length > 0;
-
-const anyProjects = 
-  (await getFilteredCollectionEntries("projects")).entries.length > 0;
-
-const anyFIRE = 
-  (await getFilteredCollectionEntries("FIRE")).entries.length > 0;
-
-const anyOthers = 
-  (await getFilteredCollectionEntries("others")).entries.length > 0;
+const anyDailyPosts =
+  (await getFilteredCollectionEntries("daily")).entries.length > 0;
 ---
 
 <header transition:persist>
@@ -37,56 +28,19 @@ const anyOthers =
       </TextLink>
       <nav class="flex items-center gap-1 text-sm">
         {" "}
-        {
-          anyBlogPosts && (
-            <>
-              <span></span>
-              <TextLink href={resolvePath("/blog", Astro.url.pathname)}>
-                blog
-              </TextLink>
-            </>
-          )
-        }
-        {
-          anyTalks && (
-            <>
-              <span>{`|`}</span>
-              <TextLink href={resolvePath("/talks", Astro.url.pathname)}>
-                talks
-              </TextLink>
-            </>
-          )
-        }
-        {
-          anyProjects && (
-            <>
-              <span>{`|`}</span>
-              <TextLink href={resolvePath("/projects", Astro.url.pathname)}>
-                projects
-              </TextLink>
-            </>
-          )
-        }
-        {
-          anyFIRE && (
-            <>
-              <span>{`|`}</span>
-              <TextLink href={resolvePath("/FIRE", Astro.url.pathname)}>
-                FIRE
-              </TextLink>
-            </>
-          )
-        }
-        {
-          anyOthers && (
-            <>
-              <span>{`|`}</span>
-              <TextLink href={resolvePath("/others", Astro.url.pathname)}>
-                others
-              </TextLink>
-            </>
-          )
-        }
+        {anyBlogPosts && (
+          <TextLink href={resolvePath("/blog", Astro.url.pathname)}>
+            Blog
+          </TextLink>
+        )}
+        {anyDailyPosts && (
+          <>
+            {anyBlogPosts && <span>{`|`}</span>}
+            <TextLink href={resolvePath("/daily", Astro.url.pathname)}>
+              Daily
+            </TextLink>
+          </>
+        )}
         <span>{`|`}</span>
         <button
           id="magnifying-glass"

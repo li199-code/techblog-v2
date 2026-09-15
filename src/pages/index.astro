@@ -3,8 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
 import { HOME, GLOBAL, type CollectionName } from "@consts";
 import BlogCardButton from "@components/BlogCardButton.astro";
-import FireCardButton from "@components/FireCardButton.astro";
-import TalkCardButton from "@components/TalkCardButton.astro";
+import DailyCardButton from "@components/DailyCardButton.astro";
 import TextLink from "@components/TextLink.astro";
 import type { CollectionEntry } from "astro:content";
 import { getFilteredCollectionEntries, resolvePath } from "@lib/utils";
@@ -22,12 +21,7 @@ async function getCollectionEntries<T extends CollectionName>(
 
 const blog = await getCollectionEntries("blog", HOME.blogEntries ?? 0);
 
-const firePosts = await getCollectionEntries(
-  "FIRE",
-  HOME.fireEntries ?? 0,
-);
-
-const talks = await getCollectionEntries("talks", HOME.talkEntries ?? 0);
+const daily = await getCollectionEntries("daily", HOME.dailyEntries ?? 0);
 ---
 
 <Layout>
@@ -75,37 +69,18 @@ const talks = await getCollectionEntries("talks", HOME.talkEntries ?? 0);
         }
 
         {
-          talks.length > 0 && (
+          daily.length > 0 && (
             <section class="animate space-y-6">
               <div class="flex flex-wrap items-center justify-between gap-y-2">
                 <h2 class="font-semibold text-black dark:text-white">
-                  Recent talks
+                  Recent daily posts
                 </h2>
-                <TextLink href="talks">all talks </TextLink>
+                <TextLink href="daily">all daily posts </TextLink>
               </div>
               <ul class="not-prose flex flex-col gap-4">
-                {talks.map((talk) => (
+                {daily.map((entry) => (
                   <li>
-                    <TalkCardButton entry={talk} />
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )
-        }
-        {
-          firePosts.length > 0 && (
-            <section class="animate space-y-6">
-              <div class="flex flex-wrap items-center justify-between gap-y-2">
-                <h2 class="font-semibold text-black dark:text-white">
-                  Recent FIRE posts
-                </h2>
-                <TextLink href="FIRE">all FIRE posts </TextLink>
-              </div>
-              <ul class="not-prose flex flex-col gap-4">
-                {firePosts.map((post) => (
-                  <li>
-                    <FireCardButton entry={post} />
+                    <DailyCardButton entry={entry} />
                   </li>
                 ))}
               </ul>

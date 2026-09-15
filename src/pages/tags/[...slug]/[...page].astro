@@ -4,6 +4,7 @@ import RootPageIndex from "@components/RootPageIndex.astro";
 import PageNavigation from "@components/PageNavigation.astro";
 import type { CollectionEntry } from "astro:content";
 import BlogCardButton from "@components/BlogCardButton.astro";
+import DailyCardButton from "@components/DailyCardButton.astro";
 import ProjectCardButton from "@components/ProjectCardButton.astro";
 import TalkCardButton from "@components/TalkCardButton.astro";
 import { TAGS, type CollectionName } from "@consts";
@@ -71,6 +72,14 @@ for (const entry of entries) {
                                         <BlogCardButton
                                             entry={
                                                 entry as CollectionEntry<"blog">
+                                            }
+                                        />
+                                    ) : undefined}
+
+                                    {group.collection === "daily" ? (
+                                        <DailyCardButton
+                                            entry={
+                                                entry as CollectionEntry<"daily">
                                             }
                                         />
                                     ) : undefined}

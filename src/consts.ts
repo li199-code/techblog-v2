@@ -1,4 +1,10 @@
-export type CollectionName = "blog" | "projects" | "talks" | "FIRE" | "others";
+export type CollectionName =
+  | "blog"
+  | "daily"
+  | "projects"
+  | "talks"
+  | "FIRE"
+  | "others";
 
 
 export type GlobalSite = {
@@ -30,6 +36,7 @@ type CollectionSite =  {
 
 type HomeSite =  {
   blogEntries?: number;
+  dailyEntries?: number;
   projectEntries?: number;
   fireEntries?: number;
   talkEntries?: number;
@@ -37,6 +44,7 @@ type HomeSite =  {
 
 export const HOME: HomeSite = {
   blogEntries: 5,
+  dailyEntries: 5,
   projectEntries: 3,
   fireEntries: 5,
   talkEntries: 3,
@@ -55,6 +63,10 @@ export const BLOG: BlogSite = {
     name: "CC BY-NC-ND 4.0",
     href: "https://creativecommons.org/licenses/by-nc-nd/4.0",
   },
+};
+
+export const DAILY: CollectionSite = {
+  pageSize: 10,
 };
 
 export const PROJECTS: CollectionSite = {

@@ -13,6 +13,19 @@ const blog = defineCollection({
   }),
 });
 
+const daily = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    lastUpdateDate: z.coerce.date().optional(),
+    description: z.string().optional(),
+    ogImage: z.string().optional(),
+    draft: z.boolean().optional(),
+    tags: z.array(z.string()).optional(),
+  }),
+});
+
 const projects = defineCollection({
   type: "content",
   schema: z.object({
@@ -65,4 +78,4 @@ const others = defineCollection({
   }),
 });
 
-export const collections = { blog, projects, talks, FIRE, others };
+export const collections = { blog, daily, projects, talks, FIRE, others };
