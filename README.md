@@ -8,6 +8,17 @@
 
 部署：github action 构建 astro 静态站点，并部署到 github pages。
 
+## 本地运行
+
+Astro 7 及当前依赖要求 Node.js >=22.19.0，推荐使用 Node.js 24 LTS。
+
+```sh
+npm install
+npm run dev
+```
+
+构建验证：`npm run build`。
+
 ## 新建文章
 
 ```

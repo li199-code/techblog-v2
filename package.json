@@ -2,6 +2,9 @@
   "name": "astro-milidev",
   "type": "module",
   "version": "1.1.0",
+  "engines": {
+    "node": ">=22.19.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -13,15 +16,16 @@
     "hooks:install": "node scripts/install-hooks.js"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.6",
-    "@astrojs/mdx": "^4.3.13",
-    "@astrojs/rss": "^4.0.14",
-    "@astrojs/sitemap": "^3.6.0",
-    "@astrojs/tailwind": "^6.0.2",
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/mdx": "^8.0.3",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
     "@fontsource/geist-mono": "^5.1.0",
     "@fontsource/geist-sans": "^5.1.0",
-    "astro": "^5.16.6",
-    "astro-pagefind": "^1.6.0",
+    "@pagefind/default-ui": "^1.5.2",
+    "astro": "^7.3.6",
+    "astro-pagefind": "^2.0.1",
+    "autoprefixer": "^10.4.21",
     "clsx": "^2.1.1",
     "tailwind-merge": "^2.5.2",
     "tailwindcss": "^3.4.12",
@@ -29,7 +33,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
-    "pagefind": "^1.1.1",
+    "pagefind": "^1.5.2",
     "prettier": "^3.3.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.6"

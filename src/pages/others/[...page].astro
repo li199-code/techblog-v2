@@ -8,7 +8,7 @@ import PageNavigation from "@components/PageNavigation.astro";
 export async function getStaticPaths({ paginate }: { paginate: any }) {
   const { entries } = await getFilteredCollectionEntries("others");
   const posts = entries.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.id },
     props: post,
   }));
 

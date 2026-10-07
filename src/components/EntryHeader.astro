@@ -8,11 +8,11 @@ interface Props {
     date: Date;
     lastUpdateDate?: Date;
     description?: string;
-    body: string;
+    body?: string;
     tags?: string[];
 }
 
-const { title, date, lastUpdateDate, description, body, tags } = Astro.props;
+const { title, date, lastUpdateDate, description, body = "", tags } = Astro.props;
 ---
 
 <div class="animate my-10 space-y-1">

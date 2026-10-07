@@ -34,12 +34,12 @@ const anyDailyPosts =
           </TextLink>
         )}
         {anyDailyPosts && (
-          <>
+          <Fragment>
             {anyBlogPosts && <span>{`|`}</span>}
             <TextLink href={resolvePath("/daily", Astro.url.pathname)}>
               Daily
             </TextLink>
-          </>
+          </Fragment>
         )}
         <span>{`|`}</span>
         <button

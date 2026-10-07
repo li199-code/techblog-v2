@@ -1,0 +1,126 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e4]:
+      - link "Jason Lee" [ref=f1e5] [cursor=pointer]:
+        - /url: /
+      - navigation [ref=f1e7]:
+        - link "Blog" [ref=f1e8] [cursor=pointer]:
+          - /url: /blog
+        - generic [ref=f1e9]: "|"
+        - link "Daily" [ref=f1e10] [cursor=pointer]:
+          - /url: /daily
+        - generic [ref=f1e11]: "|"
+        - button "Search" [ref=f1e12] [cursor=pointer]
+  - main [ref=f1e15]:
+    - complementary [ref=f1e17]:
+      - img "Jason Lee" [ref=f1e19]
+      - heading "Hi, I'm Jason Lee" [level=1] [ref=f1e20]
+      - generic [ref=f1e21]:
+        - article [ref=f1e23]:
+          - generic [ref=f1e24]:
+            - paragraph [ref=f1e25]: I hope I can still be curious about the world when I turn 60.
+            - paragraph [ref=f1e26]: Enjoy!
+          - heading "Contact me:" [level=2] [ref=f1e27]
+          - paragraph [ref=f1e28]:
+            - link "Email" [ref=f1e29] [cursor=pointer]:
+              - /url: mailto:realjasonlee4000@gmail.com
+            - text: "|"
+            - link "GitHub" [ref=f1e30] [cursor=pointer]:
+              - /url: https://github.com/li199-code
+        - generic [ref=f1e31]:
+          - generic [ref=f1e32]:
+            - heading "Recent blog posts" [level=2] [ref=f1e33]
+            - link "all blog posts" [ref=f1e34] [cursor=pointer]:
+              - /url: blog
+          - list [ref=f1e35]:
+            - listitem [ref=f1e36]:
+              - link "2026-10-06 记录一次手术后伤口护理和一些对首诊负责制的思考 这里写描述" [ref=f1e37] [cursor=pointer]:
+                - /url: /blog/2026-10-06-记录一次手术后伤口护理和一些对首诊负责制的思考
+                - generic [ref=f1e38]:
+                  - generic [ref=f1e39]: 2026-10-06
+                  - generic [ref=f1e40]: 记录一次手术后伤口护理和一些对首诊负责制的思考
+                  - generic [ref=f1e41]: 这里写描述
+            - listitem [ref=f1e44]:
+              - link "2026-08-22 我常看的两个指标 我常看的两个指标" [ref=f1e45] [cursor=pointer]:
+                - /url: /blog/2026-08-22-我常看的两个指标
+                - generic [ref=f1e46]:
+                  - generic [ref=f1e47]: 2026-08-22
+                  - generic [ref=f1e48]: 我常看的两个指标
+                  - generic [ref=f1e49]: 我常看的两个指标
+            - listitem [ref=f1e52]:
+              - link "2026-08-10 赚风格转换的钱 这里写描述" [ref=f1e53] [cursor=pointer]:
+                - /url: /blog/2026-08-10-赚风格转换的钱
+                - generic [ref=f1e54]:
+                  - generic [ref=f1e55]: 2026-08-10
+                  - generic [ref=f1e56]: 赚风格转换的钱
+                  - generic [ref=f1e57]: 这里写描述
+            - listitem [ref=f1e60]:
+              - link "2026-07-25 赚企业的钱和赚市场的钱 可能是我之后很长一段时间的策略" [ref=f1e61] [cursor=pointer]:
+                - /url: /blog/2026-07-25-赚企业的钱和赚市场的钱
+                - generic [ref=f1e62]:
+                  - generic [ref=f1e63]: 2026-07-25
+                  - generic [ref=f1e64]: 赚企业的钱和赚市场的钱
+                  - generic [ref=f1e65]: 可能是我之后很长一段时间的策略
+            - listitem [ref=f1e68]:
+              - link "2026-07-19 周期行业 周期行业投资" [ref=f1e69] [cursor=pointer]:
+                - /url: /blog/2026-07-19-周期行业
+                - generic [ref=f1e70]:
+                  - generic [ref=f1e71]: 2026-07-19
+                  - generic [ref=f1e72]: 周期行业
+                  - generic [ref=f1e73]: 周期行业投资
+        - generic [ref=f1e76]:
+          - generic [ref=f1e77]:
+            - heading "Recent daily posts" [level=2] [ref=f1e78]
+            - link "all daily posts" [ref=f1e79] [cursor=pointer]:
+              - /url: daily
+          - list [ref=f1e80]:
+            - listitem [ref=f1e81]:
+              - link "2026-10-03 20261003 这里写描述" [ref=f1e82] [cursor=pointer]:
+                - /url: /daily/2026-10-03-20261003
+                - generic [ref=f1e83]:
+                  - generic [ref=f1e84]: 2026-10-03
+                  - generic [ref=f1e85]: "20261003"
+                  - generic [ref=f1e86]: 这里写描述
+            - listitem [ref=f1e89]:
+              - link "2026-09-29 20260929 这里写描述" [ref=f1e90] [cursor=pointer]:
+                - /url: /daily/2026-09-29-20260929
+                - generic [ref=f1e91]:
+                  - generic [ref=f1e92]: 2026-09-29
+                  - generic [ref=f1e93]: "20260929"
+                  - generic [ref=f1e94]: 这里写描述
+            - listitem [ref=f1e97]:
+              - link "2026-09-25 20260925 这里写描述" [ref=f1e98] [cursor=pointer]:
+                - /url: /daily/2026-09-25-20260925
+                - generic [ref=f1e99]:
+                  - generic [ref=f1e100]: 2026-09-25
+                  - generic [ref=f1e101]: "20260925"
+                  - generic [ref=f1e102]: 这里写描述
+            - listitem [ref=f1e105]:
+              - link "2026-09-23 20260923 这里写描述" [ref=f1e106] [cursor=pointer]:
+                - /url: /daily/2026-09-23-20260923
+                - generic [ref=f1e107]:
+                  - generic [ref=f1e108]: 2026-09-23
+                  - generic [ref=f1e109]: "20260923"
+                  - generic [ref=f1e110]: 这里写描述
+            - listitem [ref=f1e113]:
+              - link "2026-09-22 20260922 这里写描述" [ref=f1e114] [cursor=pointer]:
+                - /url: /daily/2026-09-22-20260922
+                - generic [ref=f1e115]:
+                  - generic [ref=f1e116]: 2026-09-22
+                  - generic [ref=f1e117]: "20260922"
+                  - generic [ref=f1e118]: 这里写描述
+  - contentinfo [ref=f1e121]:
+    - generic [ref=f1e122]:
+      - generic [ref=f1e123]:
+        - button "Back to top"
+      - generic [ref=f1e124]:
+        - generic [ref=f1e125]: 2022 - 2026 | Jason Lee
+        - generic [ref=f1e126]:
+          - button "Light theme" [ref=f1e127] [cursor=pointer]
+          - button "Dark theme" [ref=f1e134] [cursor=pointer]
+          - button "System theme" [ref=f1e137] [cursor=pointer]
+      - generic [ref=f1e141]:
+        - text: "theme:"
+        - link "Astro Milidev" [ref=f1e142] [cursor=pointer]:
+          - /url: https://github.com/bartoszlenar/astro-milidev
+  - complementary

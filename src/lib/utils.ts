@@ -52,7 +52,7 @@ export async function getNavigationEntries<T extends CollectionName>(
 
   const { entries } = await getFilteredCollectionEntries(collectionName);
   const currentIndex = entries.findIndex(
-    (entry) => entry.slug === referenceSlug,
+    (entry) => entry.id === referenceSlug,
   );
 
   return {

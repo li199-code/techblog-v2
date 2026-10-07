@@ -11,7 +11,7 @@ const { entry } = Astro.props;
 ---
 
 <ArrowCardButton
-  href={resolvePath(`/${entry.collection}/${entry.slug}`, Astro.url.pathname)}
+  href={resolvePath(`/${entry.collection}/${entry.id}`, Astro.url.pathname)}
   textAbove={formatDateWithLastUpdateDate(
     entry.data.date,
     entry.data.lastUpdateDate,

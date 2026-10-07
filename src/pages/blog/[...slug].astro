@@ -13,11 +13,12 @@ import Giscus from "@components/Giscus.astro";
 import BlogLicenceInfo from "@components/BlogLicenseInfo.astro";
 import BlogAuthor from "../../components/BlogAuthor.astro";
 import EntryHeader from "@components/EntryHeader.astro";
+import { render } from "astro:content";
 
 export async function getStaticPaths() {
   const { entries } = await getFilteredCollectionEntries("blog");
   return entries.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.id },
     props: post,
   }));
 }
@@ -27,7 +28,7 @@ const { prevPost, nextPost } = await getNavigationEntries(
 );
 
 const entry = Astro.props;
-const { Content, headings } = await entry.render();
+const { Content, headings } = await render(entry);
 ---
 
 <Layout
