@@ -44,6 +44,10 @@ article {
   @apply prose-headings:text-black prose-headings:dark:text-white;
 }
 
+article .mdx-figure figcaption {
+  @apply mt-2 text-center;
+}
+
 @layer utilities {
   article a {
     @apply font-sans text-current underline underline-offset-[3px];
