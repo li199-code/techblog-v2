@@ -123,6 +123,13 @@ function extractJson(text) {
 }
 
 function getProviders() {
+  const ollamaProvider = {
+    name: "本地 Ollama",
+    apiKey: process.env.OLLAMA_API_KEY || "ollama",
+    baseUrl: process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1",
+    model: process.env.OLLAMA_MODEL || "qwen2.5:1.5b",
+  };
+
   if (process.env.BLOG_AI_API_KEY) {
     return [
       {
@@ -135,6 +142,7 @@ function getProviders() {
   }
 
   return [
+    ollamaProvider,
     {
       name: "阿里云百炼",
       apiKey: process.env.ALIBABA_API_KEY,
