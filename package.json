@@ -8,7 +8,9 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "new": "node scripts/create-blog.js"
+    "new": "node scripts/create-blog.js",
+    "blog:metadata": "node scripts/fill-blog-metadata.js",
+    "hooks:install": "node scripts/install-hooks.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
