@@ -5,6 +5,7 @@ tags: [docker, django, mysql]
 categories: 全栈项目wey
 abbrlink: f5061afc
 date: 2023-06-24 17:16:09
+description: "使用Django+Nginx+MySQL三容器部署方式"
 ---
 
 ## 前言

@@ -4,6 +4,7 @@ summary: child-process简介，以及调试过程的踩坑记录
 tags: [NodeJS]
 abbrlink: 57ebbc6d
 date: 2024-08-26 22:31:15
+description: "梳理Node.js中exec、spawn和fork的用途，结合调用ETL脚本的经历记录子进程调试中遇到的问题。"
 ---
 
 今天工作中，遇到一个难缠的需求：在 nodejs 中用命令行方式运行一段 etl 脚本。数据库是 SAP 公司的 hana，相对冷门，驱动的接口和其他也有区别。需求中用到了`await-exec`这个库，其背后是 child-process,即用于创建和控制子进程。这个模块允许你在 Node.js 应用中运行外部命令、脚本或其他 Node.js 进程，并与这些子进程进行通信。通过 child_process，你可以执行 shell 命令、启动其他程序，甚至是在独立的 Node.js 环境中运行代码。

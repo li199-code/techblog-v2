@@ -5,6 +5,7 @@ tags: [pgsql]
 abbrlink: 9b2898ad
 date: 2023-11-11 16:41:49
 categories:
+description: "总结一些工作中非常有用的 PostgreSQL 用法。"
 ---
 
 总结一些工作中非常有用的 pgsql 用法。

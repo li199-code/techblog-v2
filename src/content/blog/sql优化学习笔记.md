@@ -4,6 +4,7 @@ tags: [sql优化]
 abbrlink: 5731d47d
 date: 2024-01-08 22:01:24
 categories:
+description: "整理SQL子句执行顺序与查询优化目标，结合PostgreSQL执行计划学习定位查询中的性能问题。"
 ---
 
 ## 预备知识

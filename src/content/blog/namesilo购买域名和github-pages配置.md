@@ -4,6 +4,7 @@ tags: [网站建设]
 abbrlink: 7d52c22c
 date: 2023-02-04 18:27:15
 categories:
+description: "记录在Namesilo购买域名后，为GitHub Pages配置自定义域名、CNAME、DNS解析与HTTPS的步骤。"
 ---
 
 自从建立网站以来，每次访问，都困扰于输入长长的域名前缀 www，此外，goldspot 似乎也太长且拗口。坑爹的是，goldspot 绑定的 namesilo 账号不知为什么登不上去了。索性重开新号，购买新域名。

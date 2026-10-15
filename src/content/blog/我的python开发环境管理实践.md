@@ -6,6 +6,7 @@ abbrlink: 6f4edb74
 date: 2023-06-21 08:33:38
 categories:
 summary: 针对小脚本和大项目的不同场景下，基于 venv+vscode/pycharm 的 python 环境管理方案。
+description: "我的python开发环境管理实践"
 ---
 
 ## 前言

@@ -3,6 +3,7 @@ title: Hello World!
 tags: [网站建设]
 abbrlink: 1c291ca3
 date: 2022-07-26 09:41:37
+description: "记录使用Hexo和免费GitHub Pages搭建个人博客的过程，包括Namesilo域名购买、建站成本与日常文章发布命令。"
 ---
 
 ## 记录一下本网站的建立过程

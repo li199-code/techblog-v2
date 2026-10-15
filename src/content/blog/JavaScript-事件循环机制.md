@@ -5,6 +5,7 @@ tags: [JavaScript, 异步编程]
 categories: JavaScript异步编程
 abbrlink: c0d179b0
 date: 2024-07-07 22:48:28
+description: "JavaScript事件循环机制是任务执行顺序的基础，包括调用栈、任务队列、微任务队列和事件循环。通过示例代码，展示了任务执行顺序的详细过程。"
 ---
 
 在 JavaScript 中，任务的执行顺序是基于事件循环（Event Loop）机制。理解这一机制对于编写高效、非阻塞的 JavaScript 代码至关重要。JavaScript 的执行模型可以分为以下几部分：

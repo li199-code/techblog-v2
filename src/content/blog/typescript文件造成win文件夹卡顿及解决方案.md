@@ -5,6 +5,7 @@ tags: [TypeScript]
 abbrlink: ee91a880
 date: 2023-08-09 09:43:24
 categories: TypeScript
+description: "Windows 11 把 .ts 文件默认为视频文件，导致文件夹刷新缓慢。解决方案：修改注册表，使系统默认 .ts 为文本文档。"
 ---
 
 写了好几天的 ts 代码，发现打开包含 ts 代码的文件夹时，文件夹会缓慢刷新，而且不是列表形式展示。非常痛苦:(

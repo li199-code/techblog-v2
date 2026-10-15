@@ -5,6 +5,7 @@ tags: [machine-learning]
 categories: python 机器学习
 abbrlink: 43105c4b
 date: 2023-10-15 23:00:39
+description: "通过Python示例记录PCA与LDA降维的使用方法，涵盖模型拟合、主成分与方差贡献比例，以及降维结果可视化。"
 ---
 
 ## PCA（主成分分析）

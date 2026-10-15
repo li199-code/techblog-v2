@@ -5,6 +5,7 @@ tags: [vue, django, 最佳实践]
 categories: 全栈项目wey
 abbrlink: 6f16f258
 date: 2023-06-26 22:33:30
+description: "整理Vue与Django项目区分开发和生产环境的配置方式，记录环境变量文件、API地址及对应配置的加载方法。"
 ---
 
 ## 前言

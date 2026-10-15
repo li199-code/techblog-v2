@@ -4,6 +4,7 @@ tags: [deep-learning]
 categories: 动手pytorch
 abbrlink: 49cd3ce
 date: 2023-04-02 20:31:59
+description: "Batch Normalization 是一种常见的神经网络技术，通过将数据批量归一化来缓解梯度消失问题，加速训练，改善模型训练效果。"
 ---
 
 ## 前言

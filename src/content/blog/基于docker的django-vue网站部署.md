@@ -5,6 +5,7 @@ tags: [docker, django, uwsgi, nginx]
 categories: 全栈项目wey
 abbrlink: e818c632
 date: 2023-05-29 22:28:41
+description: "本文详细介绍了如何使用Docker和Docker Compose部署一个基于Django和Vue的前后端分离网站。"
 ---
 
 ## 前言

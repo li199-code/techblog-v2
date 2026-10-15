@@ -3,6 +3,7 @@ title: nodejs构建服务器
 tags: [nodejs]
 abbrlink: 8624285c
 date: 2022-07-27 21:31:25
+description: "通过Node.js的http模块实现简单服务器，演示请求监听、文件读取和响应返回，并记录对服务器职责的理解。"
 ---
 
 ## 从nodejs服务器想到的

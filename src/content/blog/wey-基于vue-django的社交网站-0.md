@@ -4,6 +4,8 @@ authors: Jason
 categories: 全栈项目wey
 abbrlink: 578822d0
 date: 2023-06-22 20:49:39
+description: "基于vue+django的社交网站项目记录，包括技术栈工作流、前端和后端开发、部署等内容。"
+tags: ["vue","django","git","tailwind","tailwindcss"]
 ---
 
 ## 前言

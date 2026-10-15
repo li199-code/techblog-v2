@@ -6,6 +6,7 @@ date: 2023-12-16 23:38:01
 updated: 2024-05-03 00:00:00
 categories: Javascript 进阶
 authors: Jason
+description: "面向对象编程是一种编程范式，用于降低代码耦合度。在 JavaScript 中，OOP 通常通过类和对象来实现。ES6 引入了 class 关键字，使得类的创建更加简洁。同时，ES6 还引入了接口和抽象类的概念，这些都使得 JavaScript 的面向对象编程更加现代化。"
 ---
 
 OOP 在不同编程语言中都通用的概念，并用 js 举例说明，同时包含 ts 相对于 js 独有的特性。

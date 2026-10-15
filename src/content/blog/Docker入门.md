@@ -4,6 +4,7 @@ tags: [docker]
 abbrlink: '89826705'
 date: 2023-01-31 11:15:33
 categories:
+description: "公司的项目是用 docker 来部署的。之前看过一个 docker 科普视频，还没有动手实践过。现在将查到的东西做一个梳理（windows 平台）。"
 ---
 
 公司的项目是用 docker 来部署的。之前看过一个 docker 科普视频，还没有动手实践过。现在将查到的东西做一个梳理（windows 平台）。

@@ -3,6 +3,7 @@ title: string/array方法总结
 tags: [javascript]
 abbrlink: e50d8a89
 date: 2022-08-24 14:55:55
+description: "总结了string和array数据类型的方法和使用场景。"
 ---
 string、array是非常常用的数据类型。对下面的常用方法进行总结。
 

@@ -5,6 +5,7 @@ tags: [django]
 abbrlink: "62789229"
 date: 2023-04-28 16:05:54
 categories:
+description: "结合用户注册场景，解释Django中Form与ModelForm的关系，以及表单如何绑定模型、验证输入并保存数据。"
 ---
 
 ## 前言

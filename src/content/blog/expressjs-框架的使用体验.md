@@ -4,6 +4,7 @@ summary: expressjs是nodejs体系内最流行的框架，本文是对它的一�
 tags: [expressjs, 框架]
 abbrlink: 13a2dd29
 date: 2024-07-17 14:11:55
+description: "Express.js是一个快速、无预设的、极简的web框架。它基于Node.js，适用于快速开发和部署。"
 ---
 
 expressjs 的官网介绍：一款快速的、无预设的、极简的 web 框架。Nodejs 的很多框架正是基于 expressjs。作为一个极简框架，我打算在一篇文章中介绍它和我的使用感受。

@@ -4,6 +4,7 @@ tags: [latex]
 abbrlink: f1f9e77b
 date: 2023-02-12 23:23:38
 categories:
+description: "解决 LaTeX 中的奇怪 bug 和清除浮动来消除大片空白的问题。"
 ---
 
 # latex overleaf 生僻字处理方案

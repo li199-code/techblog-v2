@@ -4,6 +4,7 @@ summary: 对四种k8s service类型做了说明，给出了它们的工作场景
 tags: [k8s]
 abbrlink: b5627f2f
 date: 2024-06-22 18:52:40
+description: "比较Kubernetes中ClusterIP、NodePort和LoadBalancer三种Service的访问范围、端口配置及适用场景。"
 ---
 
 从我个人角度来看，service 是 k8s 最容易出问题的地方。网络不通是最常见的问题，想要排查网络，就要对 service 有一个深入的理解。

@@ -56,7 +56,7 @@ async function loadDotEnv() {
   }
 }
 
-function getNewStagedBlogFiles() {
+function getNewStagedArticleFiles() {
   const output = runGit([
     "diff",
     "--cached",
@@ -65,9 +65,34 @@ function getNewStagedBlogFiles() {
     "-z",
     "--",
     "src/content/blog/*.mdx",
+    "src/content/blog/*.md",
+    "src/content/daily/*.mdx",
+    "src/content/daily/*.md",
   ]);
 
   return output.split("\0").filter(Boolean);
+}
+
+async function getAllArticleFiles() {
+  const files = [];
+  for (const collection of ["blog", "daily"]) {
+    const directory = path.join(rootDir, "src", "content", collection);
+    const entries = await fs.readdir(directory, {
+      recursive: true,
+      withFileTypes: true,
+    });
+    for (const entry of entries) {
+      if (entry.isFile() && /\.mdx?$/.test(entry.name)) {
+        files.push(
+          path
+            .relative(rootDir, path.join(entry.parentPath, entry.name))
+            .split(path.sep)
+            .join("/"),
+        );
+      }
+    }
+  }
+  return files.sort();
 }
 
 function getFilesWithUnstagedChanges(files) {
@@ -81,9 +106,9 @@ function parseFrontmatter(source, file) {
   if (!match) throw new Error(`${file} 没有有效的 YAML frontmatter`);
 
   const frontmatter = match[1];
-  const titleMatch = frontmatter.match(/^title:\s*(.+)$/m);
-  const descriptionMatch = frontmatter.match(/^description:\s*(.*)$/m);
-  const tagsMatch = frontmatter.match(/^tags:\s*(.*)$/m);
+  const titleMatch = frontmatter.match(/^title:[ \t]*(.+)$/m);
+  const descriptionMatch = frontmatter.match(/^description:[ \t]*([^\r\n]*)/m);
+  const tagsMatch = frontmatter.match(/^tags:[ \t]*([^\r\n]*)/m);
   const description = descriptionMatch
     ? descriptionMatch[1]
         .trim()
@@ -96,7 +121,7 @@ function parseFrontmatter(source, file) {
     frontmatter,
     title:
       titleMatch?.[1].trim().replace(/^(?:"([\s\S]*)"|'([\s\S]*)')$/, "$1$2") ||
-      path.basename(file, ".mdx"),
+      path.basename(file, path.extname(file)),
     needsDescription:
       !descriptionMatch || placeholderDescriptions.has(description),
     needsTags: !tagsMatch || rawTags === "" || /^\[\s*\]$/.test(rawTags),
@@ -181,7 +206,7 @@ async function requestMetadata(provider, { title, body }) {
         {
           role: "system",
           content:
-            '你是中文技术博客编辑。根据文章生成准确、自然的摘要和标签。摘要用一到两句中文，不夸大、不使用‘本文将’等套话，建议 30 到 80 个汉字。标签生成 2 到 5 个，保持简短；技术名词可使用常见英文写法。只返回 JSON：{"description":"...","tags":["..."]}。',
+            '你是中文博客编辑。根据文章生成准确、自然的摘要和标签，忠实于正文，不添加文章未提及的事实。摘要用一到两句中文，不夸大、不使用‘本文将’等套话，建议 30 到 80 个汉字。标签生成 2 到 5 个，保持简短；技术名词可使用常见英文写法。只返回 JSON：{"description":"...","tags":["..."]}。',
         },
         {
           role: "user",
@@ -237,60 +262,90 @@ function updateFrontmatter(source, parsed, generated) {
   if (parsed.needsDescription) {
     const line = `description: ${JSON.stringify(generated.description)}`;
     frontmatter = /^description:.*$/m.test(frontmatter)
-      ? frontmatter.replace(/^description:.*$/m, line)
+      ? frontmatter.replace(/^description:[^\r\n]*/m, () => line)
       : `${frontmatter}${eol}${line}`;
   }
 
   if (parsed.needsTags) {
     const line = `tags: ${JSON.stringify(generated.tags)}`;
     frontmatter = /^tags:.*$/m.test(frontmatter)
-      ? frontmatter.replace(/^tags:.*$/m, line)
+      ? frontmatter.replace(/^tags:[^\r\n]*/m, () => line)
       : `${frontmatter}${eol}${line}`;
   }
 
   return source.replace(
     parsed.fullMatch,
-    `---${eol}${frontmatter}${eol}---${eol}`,
+    () => `---${eol}${frontmatter}${eol}---${eol}`,
   );
 }
 
 async function main() {
+  const args = process.argv.slice(2);
+  if (args.some((arg) => !["--all", "--dry-run"].includes(arg))) {
+    throw new Error(
+      "用法：node scripts/fill-blog-metadata.js [--all] [--dry-run]",
+    );
+  }
+  const all = args.includes("--all");
+  const dryRun = args.includes("--dry-run");
   if (process.env.SKIP_BLOG_AI === "1") {
     console.log("已跳过博客 AI 元数据生成（SKIP_BLOG_AI=1）");
     return;
   }
 
-  const files = getNewStagedBlogFiles();
+  const files = all ? await getAllArticleFiles() : getNewStagedArticleFiles();
   if (files.length === 0) return;
 
-  const unstagedFiles = getFilesWithUnstagedChanges(files);
+  const unstagedFiles = all ? [] : getFilesWithUnstagedChanges(files);
   if (unstagedFiles.length > 0) {
     throw new Error(
       `以下新文章还有未暂存的修改，请先执行 git add：\n${unstagedFiles.join("\n")}`,
     );
   }
 
-  await loadDotEnv();
+  if (!dryRun) await loadDotEnv();
+  let pending = 0;
+  let completed = 0;
+  const failures = [];
   for (const file of files) {
-    const absolutePath = path.join(rootDir, file);
-    const source = await fs.readFile(absolutePath, "utf8");
-    const parsed = parseFrontmatter(source, file);
+    try {
+      const absolutePath = path.join(rootDir, file);
+      const source = await fs.readFile(absolutePath, "utf8");
+      const parsed = parseFrontmatter(source, file);
 
-    if (!parsed.needsDescription && !parsed.needsTags) {
-      console.log(`博客元数据已填写，跳过：${file}`);
-      continue;
+      if (!parsed.needsDescription && !parsed.needsTags) {
+        continue;
+      }
+
+      pending++;
+      if (dryRun) {
+        console.log(
+          `待补全：${file} (${[parsed.needsDescription && "description", parsed.needsTags && "tags"].filter(Boolean).join(", ")})`,
+        );
+        continue;
+      }
+
+      console.log(`正在为博客生成 description 和 tags：${file}`);
+      const body = source.slice(parsed.fullMatch.length).trim();
+      const generated = await generateMetadata({ title: parsed.title, body });
+      const updated = updateFrontmatter(source, parsed, generated);
+      await fs.writeFile(absolutePath, updated, "utf8");
+      if (!all) runGit(["add", "--", file]);
+      completed++;
+      console.log(
+        `已生成${all ? "" : "并暂存"}：${generated.description} [${generated.tags.join(", ")}]`,
+      );
+    } catch (error) {
+      if (!all) throw error;
+      failures.push(file);
+      console.error(`补全失败：${file}\n${error.message}`);
     }
-
-    console.log(`正在为博客生成 description 和 tags：${file}`);
-    const body = source.slice(parsed.fullMatch.length).trim();
-    const generated = await generateMetadata({ title: parsed.title, body });
-    const updated = updateFrontmatter(source, parsed, generated);
-    await fs.writeFile(absolutePath, updated, "utf8");
-    runGit(["add", "--", file]);
-    console.log(
-      `已生成并暂存：${generated.description} [${generated.tags.join(", ")}]`,
-    );
   }
+  console.log(
+    `检查 ${files.length} 篇，待补全 ${pending} 篇${dryRun ? "（仅预览）" : `，成功 ${completed} 篇，失败 ${failures.length} 篇`}。`,
+  );
+  if (failures.length > 0)
+    throw new Error(`以下文章未完成，可重新运行重试：\n${failures.join("\n")}`);
 }
 
 main().catch((error) => {

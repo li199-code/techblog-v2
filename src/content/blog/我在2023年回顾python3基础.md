@@ -5,6 +5,7 @@ tags: [python]
 abbrlink: 31e7f4f2
 date: 2023-05-06 17:02:05
 categories:
+description: "Python基础：数字、字符串的不可变性，生成器和迭代器，迭代器和生成器的区别，不定长参数，异常处理。"
 ---
 
 ## 到底什么是数字、元组、字符串的不可变性？

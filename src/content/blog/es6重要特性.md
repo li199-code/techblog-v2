@@ -5,6 +5,7 @@ abbrlink: c5db1152
 date: 2023-12-16 21:12:33
 updated: 2023-12-16 21:12:33
 categories:
+description: "ES6的重要特性包括模板语法、解构和扩展运算符、对象字面量、剩余操作符、let和const、export和import、Class和async/await promise。"
 ---
 
 ### 前言

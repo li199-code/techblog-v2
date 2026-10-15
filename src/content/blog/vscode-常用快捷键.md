@@ -5,6 +5,7 @@ abbrlink: 43c7ac09
 date: 2024-04-15 20:38:17
 summary: VSCode 一些好用的快捷键、个性设置等。
 categories:
+description: "记录一些提升VSCode工作效率的快捷键和工作区的使用方法。"
 ---
 
 ## 快捷键

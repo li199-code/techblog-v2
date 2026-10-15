@@ -54,9 +54,16 @@ This doesn't work if the website is hosted with a base path (in `astro.config.mj
 npm run hooks:install
 ```
 
-提交新增的 `src/content/blog/*.mdx` 时，pre-commit hook 会调用 AI，自动补全模板中的 `description` 和 `tags`，并将结果加入本次提交。已有的非空元数据不会被覆盖。
+提交新增的 `src/content/blog/` 或 `src/content/daily/` 下的 `.md`、`.mdx` 文章时，pre-commit hook 会调用 AI，自动补全模板中的 `description` 和 `tags`，并将结果加入本次提交。已有的非空元数据不会被覆盖；修改已提交的文章不会触发补全。
 
-默认依次尝试 `.env` 中已配置的阿里云百炼、DeepSeek 和智谱 AI 密钥。也可以用以下变量固定使用任意兼容 OpenAI Chat Completions API 的服务（设置后不再回退）：
+检查、补全这两个目录的历史文章（包括空字段和模板占位值），结果只写入工作区，不自动暂存：
+
+```sh
+npm run blog:metadata -- --all --dry-run
+npm run blog:metadata -- --all
+```
+
+默认先尝试本地 Ollama（`http://localhost:11434/v1`，模型 `qwen2.5:1.5b`），再依次尝试 `.env` 中已配置的阿里云百炼、DeepSeek 和智谱 AI 密钥。也可以用以下变量固定使用任意兼容 OpenAI Chat Completions API 的服务（设置后不再回退）：
 
 ```dotenv
 BLOG_AI_API_KEY=your-api-key

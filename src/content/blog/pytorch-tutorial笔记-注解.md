@@ -5,6 +5,7 @@ tags: [pytorch, deep-learning]
 abbrlink: 12cb415e
 date: 2023-05-23 13:12:24
 categories:
+description: "本文梳理 PyTorch 官方教程核心概念，重点解析 Tensor 创建与属性（shape/size/device）、自定义 Dataset 与 DataLoader 协作机制、CPU/GPU 数据流转流程，并澄清常见混淆点。"
 ---
 
 ## 前言

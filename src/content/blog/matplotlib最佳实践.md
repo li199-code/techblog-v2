@@ -5,6 +5,7 @@ tags: [matplotlib]
 abbrlink: d9a6bba3
 date: 2023-04-21 14:25:44
 categories:
+description: "整理Matplotlib绘图实践，涵盖折线图、柱状图、饼图、散点图和时序图，以及动画、样式设置与子图布局。"
 ---
 
 ## 前言

@@ -3,6 +3,7 @@ title: 初学vue2踩坑记
 tags: [vue]
 abbrlink: b7e6b4f
 date: 2022-08-01 11:03:20
+description: "初学Vue2时遇到的一些坑，包括方法定义、插值表达式、flex布局、v-bind、v-model、input元素、v-for性能优化、滚动条设置、vuecli入门等。"
 ---
 
 跟着 b 站黑马程序员的视频入门 vue，跟敲代码过程中，踩到一些坑，在这里记录一下：

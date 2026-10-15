@@ -4,6 +4,7 @@ summary: ts类型推断可以极大减少不必要的类型声明，由chatgpt-4
 abbrlink: 8debb362
 date: 2024-07-14 21:55:26
 tags: [TypeScript]
+description: "TypeScript 类型推断是 TypeScript 的灵魂所在，可以自动推断变量、函数返回值、参数等的类型，减少显式类型注解的需求，提高开发效率。"
 ---
 
 类型声明是 TypeScript 的灵魂所在。但是，对于之前只接触过 JavaScript 的人，不是逢类型必加。类型推断可以让 TS 写的更像 JS，哈哈。

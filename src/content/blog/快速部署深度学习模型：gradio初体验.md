@@ -5,6 +5,7 @@ tags: [gradio, deep-learning]
 abbrlink: cee2e7e1
 date: 2023-07-06 20:47:44
 categories:
+description: "快速部署深度学习模型：gradio初体验"
 ---
 
 ## 前言

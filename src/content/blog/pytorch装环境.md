@@ -4,6 +4,7 @@ tags: [pytorch]
 categories: 动手pytorch
 abbrlink: 72f09985
 date: 2023-04-01 20:54:38
+description: "记录安装PyTorch时遇到的CPU与GPU版本、CUDA兼容性和包管理问题，整理手动选择并安装whl文件的步骤。"
 ---
 
 ## 问题描述

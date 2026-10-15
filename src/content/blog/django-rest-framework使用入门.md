@@ -5,6 +5,7 @@ tags: [django]
 abbrlink: dcdad5f8
 date: 2023-05-02 14:19:07
 categories:
+description: "记录Django REST Framework学习中的浏览器重复提交问题，梳理模型实例、Python字典与JSON之间的序列化和反序列化流程。"
 ---
 
 ## 浏览器行为

@@ -5,6 +5,7 @@ tags: [machine-learning]
 categories: python 机器学习
 abbrlink: ccf92e0d
 date: 2023-10-02 10:57:30
+description: "学习《Python机器学习》系列文章，包括分类算法、决策边界图、逻辑回归、决策树和随机森林等。"
 ---
 
 ## 前言

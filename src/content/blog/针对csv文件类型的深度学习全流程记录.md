@@ -5,6 +5,7 @@ tags: [deep-learning]
 categories: 动手pytorch
 abbrlink: dcaadedb
 date: 2023-06-06 19:46:55
+description: "本文详细记录了如何处理存储在CSV文件中的数据，包括读取、预处理、写入等环节。"
 ---
 
 ## 前言

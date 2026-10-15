@@ -5,6 +5,7 @@ abbrlink: 84f29cc2
 date: 2023-02-02 15:20:42
 categories: Javascript 进阶
 summary: 讲解了JavaScript两种最常见模块机制ES Modules和CommonJS，并举例说明。
+description: "JavaScript 模块机制介绍，包括 ES6 模块、CommonJS 模块和 AMD 模块，以及它们的优缺点。"
 ---
 
 ## 前言

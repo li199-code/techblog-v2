@@ -3,6 +3,7 @@ title: Django入门和配置
 tags: [django]
 abbrlink: 1977695e
 date: 2022-11-10 13:50:11
+description: "Django 是一个用于构建 Web 应用的 Python 框架，本文介绍了 Django 的入门和配置，包括常用命令、基本概念、模板创建、迁移和静态文件部署、ORM 和 Django 的数据库交互。"
 ---
 
 Django 是 python 的一个 web 后台框架。他的特点是大而全，因此本身命令和代码构架和原生 python 有较大区别，这篇文章是对 django 从入门到项目运行的学习记录。

@@ -4,6 +4,7 @@ summary: 跟随React教程上路的学习感想
 abbrlink: c1f77d75
 date: 2024-07-20 21:23:08
 tags: [React, 框架, 前端]
+description: "从DOM操作、状态管理和组件化等方面讨论使用前端框架的原因，并梳理React作为库与框架之间的区别。"
 ---
 
 ## 为什么学

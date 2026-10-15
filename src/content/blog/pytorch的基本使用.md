@@ -4,6 +4,7 @@ tags: [deep-learning]
 categories: 动手pytorch
 abbrlink: edc1f807
 date: 2023-03-28 16:43:29
+description: "整理PyTorch网络构建的基础用法，涵盖nn.Module、参数访问、权重初始化与共享、自定义层及模型权重保存。"
 ---
 之前我们有大量的从零实现一层网络，现在借用先进的pytorch框架，让很多功能得到封装，可以快捷的组建一个块。
 

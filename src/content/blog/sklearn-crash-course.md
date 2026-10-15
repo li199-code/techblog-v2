@@ -5,6 +5,7 @@ tags: [sklearn]
 abbrlink: 7a11e9dc
 date: 2023-09-24 23:06:24
 categories:
+description: "记录scikit-learn入门学习中的环境配置、框架使用、交叉验证、预处理与评估指标，以及Jupyter虚拟环境切换方法。"
 ---
 
 ## 前言

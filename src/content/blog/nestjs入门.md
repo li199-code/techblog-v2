@@ -5,6 +5,7 @@ tags: [nestjs]
 abbrlink: b2ab1948
 date: 2023-07-31 15:50:40
 categories:
+description: "NestJS 是基于 Express 的现代后端框架，保留了 Express 的灵活性和强大性能，为开发者提供更高级的抽象和功能，使得构建复杂的服务器端应用程序更加容易和愉快。"
 ---
 
 ## 前言

@@ -5,6 +5,7 @@ tags: [kafka]
 abbrlink: e9469f09
 date: 2023-09-20 09:06:00
 categories:
+description: "Kafka初体验：启动Zookeeper和Kafka，创建主题，生产者发送消息，消费者接受消息。"
 ---
 
 ## 启动 zookeeper 和 kafka

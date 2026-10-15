@@ -4,6 +4,7 @@ tags: [Go, 并发]
 date: 2025-05-17
 categories: 项目
 authors: Jason
+description: "一个博客聚合平台项目，使用Go语言开发后端，React+TypeScript+Shadcn开发前端，技术栈包括Go、Postgresql、React、Shadcn。"
 ---
 
 ## 项目介绍

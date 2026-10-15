@@ -4,6 +4,7 @@ tags: [办公软件]
 abbrlink: c3b1a43b
 date: 2023-04-14 19:35:26
 categories:
+description: "将 pdf 转换为 word 的方法：使用 Adobe Acrobat DC，保持流动顺序和页面布局，手动更新目录和样式管理，输入公式使用 Mathpix 和 axmath 插件。"
 ---
 
 ## 问题描述

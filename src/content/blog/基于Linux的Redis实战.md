@@ -4,6 +4,7 @@ tags: [redis]
 abbrlink: 92e3410d
 date: 2024-02-06 21:34:31
 categories:
+description: "在CentOS上安装和配置Redis，以及使用Python进行Redis操作的示例代码。"
 ---
 
 ## 安装

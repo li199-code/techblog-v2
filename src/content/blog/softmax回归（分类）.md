@@ -4,6 +4,7 @@ tags: [deep-learning]
 categories: 动手pytorch
 abbrlink: f17e2337
 date: 2023-03-23 10:20:57
+description: "机器学习（深度学习）的任务纷繁复杂。最基础的是回归和分类。分类问题是多输出，因此，训练标签和模型（网络）的输出应该是多维的。"
 ---
 
 ## 回归和分类

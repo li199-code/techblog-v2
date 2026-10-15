@@ -5,6 +5,7 @@ tags: [vue]
 abbrlink: 971c3479
 date: 2023-05-15 14:10:57
 categories:
+description: "子组件外面一层的div为什么要加v-if，因为去掉v-if会导致父组件无法正确地向子组件传值。"
 ---
 
 项目中有这样一段代码：

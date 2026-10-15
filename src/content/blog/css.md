@@ -3,6 +3,7 @@ title: css从0开始
 tags: [css]
 abbrlink: d851edc7
 date: 2022-07-30 10:55:52
+description: "CSS从零开始学习，包括选择器、样式、盒模型、定位等基础知识。"
 ---
 
 ### 前言

@@ -5,6 +5,7 @@ tags: [eggjs, sequelize]
 abbrlink: e42bc1ee
 date: 2023-09-29 12:13:49
 categories:
+description: "本文记录了使用 Egg.js、Sequelize 和 PostgreSQL 快速开发独立后端小需求的完整流程，涵盖 PostgreSQL 启动方式、Egg 项目初始化、Sequelize 配置与模型定义、数据库建表及命名约定等实践细节。"
 ---
 
 ## 前言

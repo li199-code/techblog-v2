@@ -5,6 +5,7 @@ tags: [django]
 abbrlink: 97aaa74f
 date: 2023-05-30 20:57:21
 categories:
+description: "介绍 Django 中静态文件的管理和部署，包括开发阶段和部署阶段的静态文件管理方法，以及如何设置 STATIC_URL 和 STATICFILES_DIRS。"
 ---
 
 ### 前言

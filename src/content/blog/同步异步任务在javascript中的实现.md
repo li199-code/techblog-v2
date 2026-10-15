@@ -5,6 +5,7 @@ tags: [异步编程, promise]
 categories: JavaScript异步编程
 abbrlink: c8c3d6c5
 date: 2023-08-07 14:45:51
+description: "本文介绍了JavaScript中的异步机制，包括同步和异步的区别，以及promise和async/await的使用方法。通过一个例子展示了如何使用async/await来简化异步代码的阅读和调试。"
 ---
 
 ## 前言

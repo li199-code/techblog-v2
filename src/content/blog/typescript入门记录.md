@@ -7,6 +7,7 @@ date: 2023-08-04 09:29:21
 updated: 2024-05-02 00:00:00
 categories: TypeScript
 summary: 为什么学 TypeScript
+description: "TypeScript 通过静态类型检查和接口等机制，大大减少了因为类型错误而导致的运行时异常。尽管如此，TypeScript 不能完全避免所有错误，特别是那些涉及到动态数据和外部输入的错误。"
 ---
 
 ## TypeError 举例，TS 是如何解决的

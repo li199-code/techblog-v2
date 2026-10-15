@@ -4,6 +4,7 @@ tags: [kafka, 消息队列]
 abbrlink: e6a6fb0a
 date: 2024-02-21 10:47:00
 categories:
+description: "使用 Docker 部署 Kafka 单机版，使用 kafkajs 这个库驱动 Kafka，代码示例。"
 ---
 
 ## 安装

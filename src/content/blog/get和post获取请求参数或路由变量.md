@@ -4,6 +4,7 @@ authors: Jason
 abbrlink: 3d3c510a
 date: 2023-05-13 22:31:53
 tags: [categories]
+description: "整理Django视图获取GET路径参数、查询参数和POST请求数据的方法，记录前后端分离场景中的参数处理。"
 ---
 
 ## 前言

@@ -4,6 +4,7 @@ tags: [异步编程, promise]
 categories: JavaScript异步编程
 abbrlink: 5d9fa5e8
 date: 2022-07-26 17:58:45
+description: "从异步任务的回调嵌套出发，解释Promise解决的问题、resolve与reject的用法，以及async/await和常用组合方法。"
 ---
 
 本博客的第一篇文章，讲讲 Javascript 里的 Promise。Promise 要记住的点：

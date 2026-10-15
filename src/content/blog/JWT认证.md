@@ -6,6 +6,7 @@ abbrlink: c6140e8e
 date: 2023-05-08 19:33:25
 categories:
 summary: JWT的形式及实现原理
+description: "梳理JWT令牌的头部、负荷与签名结构，解释其认证流程、浏览器存储方式，以及密钥和敏感信息的安全注意事项。"
 ---
 
 ## 前言

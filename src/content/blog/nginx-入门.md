@@ -4,6 +4,7 @@ tags: [nginx]
 abbrlink: cf06bc3b
 date: 2024-03-17 22:12:46
 categories:
+description: "整理Nginx配置静态网页、反向代理、动静分离和负载均衡的基础示例，并记录错误日志的查看位置。"
 ---
 
 出现报错，nginx 的错误日志位置：

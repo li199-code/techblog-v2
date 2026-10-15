@@ -5,6 +5,7 @@ tags: [machine-learning]
 categories: python 机器学习
 abbrlink: a279c7bb
 date: 2023-10-23 23:20:22
+description: "整理二分类模型的评估指标，从类别不平衡问题出发，记录混淆矩阵、精确率、召回率与ROC曲线的含义。"
 ---
 
 ## 性能指标（二分类问题）

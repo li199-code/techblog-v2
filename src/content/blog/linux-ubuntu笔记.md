@@ -6,6 +6,7 @@ abbrlink: be5075f5
 date: 2023-07-10 19:43:44
 categories:
 summary: 基于ubuntu的linux最常用命令及最佳实践
+description: "Linux基础操作指南，包括目录管理、文件操作、系统信息查看、软件管理、文本编辑器使用、打包压缩等。"
 ---
 
 ## 前言

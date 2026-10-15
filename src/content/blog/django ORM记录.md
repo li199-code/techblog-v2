@@ -3,6 +3,7 @@ title: Django ORM记录
 tags: [django]
 abbrlink: 6318eae6
 date: 2022-11-24 11:22:00
+description: "整理Django ORM使用中遇到的问题，包括choices字段显示、外键关联，以及通过ModelForm添加和修改数据。"
 ---
 
 记录曾经不懂的问题和踩过的坑

@@ -5,6 +5,7 @@ tags: [tailwindcss]
 abbrlink: 72ab1f3b
 date: 2023-04-27 16:50:53
 categories:
+description: "本文记录了在 Django 项目中配置 Tailwind CSS 的实践过程，对比 CDN 引入与 CLI 构建方式，重点说明如何通过 CLI 生成完整样式文件并自定义组件层样式。"
 ---
 
 ## 前言

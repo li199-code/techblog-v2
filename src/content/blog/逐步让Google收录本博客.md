@@ -5,6 +5,7 @@ tags: [seo, 网站建设]
 abbrlink: 28cb7a4d
 date: 2023-06-19 09:18:30
 categories:
+description: "记录了从提交网站到被 Google 收录的全过程，包括手动提交 sitemap、验证所有权、查询收录情况等步骤。"
 ---
 
 ## 前言

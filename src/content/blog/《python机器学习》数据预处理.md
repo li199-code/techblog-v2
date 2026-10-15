@@ -5,6 +5,7 @@ tags: [machine-learning]
 categories: python 机器学习
 abbrlink: 3e539f1
 date: 2023-10-10 21:20:00
+description: "处理缺失数据和类别数据的方法"
 ---
 
 ## 缺失数据值的处理
