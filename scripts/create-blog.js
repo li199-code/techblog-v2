@@ -42,6 +42,7 @@ const frontmatter = `---
 title: "${title}"
 authors: Jason
 date: ${date}
+pinned: false
 description: "这里写描述"
 tags: []
 ---
