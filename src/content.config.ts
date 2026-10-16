@@ -9,6 +9,7 @@ const postSchema = z.object({
   description: z.string().optional(),
   ogImage: z.string().optional(),
   draft: z.boolean().optional(),
+  pinned: z.boolean().default(false),
   tags: z.array(z.string()).optional(),
 });
 

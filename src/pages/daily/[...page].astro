@@ -26,11 +26,13 @@ const entries = page.data.map((pageEntry) => ({
 
 <RootPageIndex title="Daily">
   <ul class="animate not-prose mb-12 flex flex-col gap-4">
-    {entries.map((entry) => (
-      <li>
-        <DailyCardButton entry={entry} />
-      </li>
-    ))}
+    {
+      entries.map((entry) => (
+        <li>
+          <DailyCardButton entry={entry} pinned={entry.data.pinned} />
+        </li>
+      ))
+    }
   </ul>
 
   <PageNavigation page={page} />

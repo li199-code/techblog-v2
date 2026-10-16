@@ -25,6 +25,22 @@ npm run dev
 npm run new <title>
 ```
 
+## 首页分类内置顶
+
+在文章的 frontmatter 中添加 `pinned: true`，即可让文章在首页所属分类（Blog 或 Daily）内优先显示：
+
+```yaml
+---
+title: 文章标题
+date: 2026-10-16
+pinned: true
+---
+```
+
+未设置或设置为 `false` 时不置顶。多篇置顶文章之间按 `lastUpdateDate`（没有则使用 `date`）倒序排列，普通文章也按同样的时间规则排列。置顶文章占用首页已有的展示名额（目前每类 5 篇）；草稿不会显示。分类归档、标签页、RSS 和文章上下篇导航仍按原有时间顺序排列。
+
+首页和分类列表页（如 `/blog`、`/daily`）中，置顶文章的标题前会显示相同的金色图钉图标，鼠标悬停时提示“置顶”，并提供屏幕阅读器可读的“置顶文章”标注。分类列表页仍按原有时间顺序排列。
+
 ## RSS订阅地址
 
 https://jasonleehere.com/feed.xml

@@ -30,7 +30,7 @@ const entries = page.data.map((pageEntry) => ({
       <ul class="animate not-prose mb-12 flex flex-col gap-4">
         {entries.map((entry) => (
           <li>
-            <TalkCardButton entry={entry} />
+            <TalkCardButton entry={entry} pinned={entry.data.pinned} />
           </li>
         ))}
       </ul>

@@ -5,9 +5,10 @@ import { formatDateWithLastUpdateDate, resolvePath } from "@lib/utils";
 
 type Props = {
   entry: CollectionEntry<"daily">;
+  pinned?: boolean;
 };
 
-const { entry } = Astro.props;
+const { entry, pinned = false } = Astro.props;
 ---
 
 <ArrowCardButton
@@ -17,5 +18,6 @@ const { entry } = Astro.props;
     entry.data.lastUpdateDate,
   )}
   text={entry.data.title}
+  pinned={pinned}
   textBelow={entry.data.description}
 />

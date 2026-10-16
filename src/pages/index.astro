@@ -6,7 +6,11 @@ import BlogCardButton from "@components/BlogCardButton.astro";
 import DailyCardButton from "@components/DailyCardButton.astro";
 import TextLink from "@components/TextLink.astro";
 import type { CollectionEntry } from "astro:content";
-import { getFilteredCollectionEntries, resolvePath } from "@lib/utils";
+import {
+  getFilteredCollectionEntries,
+  resolvePath,
+  sortByLastUpdateDate,
+} from "@lib/utils";
 import Bio from "../components/Bio.astro";
 import Contact from "@components/Contact.astro";
 
@@ -16,7 +20,13 @@ async function getCollectionEntries<T extends CollectionName>(
 ): Promise<CollectionEntry<T>[]> {
   const { entries } = await getFilteredCollectionEntries(collectionName);
 
-  return entries.slice(0, maxItems);
+  return entries
+    .sort(
+      (a, b) =>
+        Number(b.data.pinned) - Number(a.data.pinned) ||
+        sortByLastUpdateDate(a, b),
+    )
+    .slice(0, maxItems);
 }
 
 const blog = await getCollectionEntries("blog", HOME.blogEntries ?? 0);
@@ -60,7 +70,7 @@ const daily = await getCollectionEntries("daily", HOME.dailyEntries ?? 0);
               <ul class="not-prose flex flex-col gap-4">
                 {blog.map((post) => (
                   <li>
-                    <BlogCardButton entry={post} />
+                    <BlogCardButton entry={post} pinned={post.data.pinned} />
                   </li>
                 ))}
               </ul>
@@ -80,7 +90,7 @@ const daily = await getCollectionEntries("daily", HOME.dailyEntries ?? 0);
               <ul class="not-prose flex flex-col gap-4">
                 {daily.map((entry) => (
                   <li>
-                    <DailyCardButton entry={entry} />
+                    <DailyCardButton entry={entry} pinned={entry.data.pinned} />
                   </li>
                 ))}
               </ul>
