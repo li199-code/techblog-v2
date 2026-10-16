@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --font-sans: theme("fontFamily.sans");
+  --font-mono: theme("fontFamily.mono");
+  --selection-bg: #dce8f2;
+  --selection-text: #20354b;
+}
+
+::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-text);
+  text-shadow: none;
+}
+
 html {
   overflow-y: auto;
   color-scheme: light;
@@ -10,6 +23,8 @@ html {
 
 html.dark {
   color-scheme: dark;
+  --selection-bg: #344b61;
+  --selection-text: #edf4fa;
 }
 
 html,
@@ -22,6 +37,23 @@ body {
   @apply flex flex-col;
   @apply bg-neutral-100 dark:bg-neutral-900;
   @apply text-black/75 dark:text-white/75;
+  line-height: 1.75;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+h1 {
+  letter-spacing: -0.025em;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 header {
@@ -42,6 +74,23 @@ article {
   @apply prose prose-neutral max-w-full dark:prose-invert prose-img:mx-auto prose-img:my-auto;
   @apply prose-headings:font-semibold;
   @apply prose-headings:text-black prose-headings:dark:text-white;
+  line-height: 1.9;
+}
+
+article :where(h1, h2, h3, h4) {
+  line-height: 1.5;
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+}
+
+pre {
+  line-height: 1.7;
+  font-variant-ligatures: none;
 }
 
 article .mdx-figure figcaption {
