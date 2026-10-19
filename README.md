@@ -79,7 +79,7 @@ npm run blog:metadata -- --all --dry-run
 npm run blog:metadata -- --all
 ```
 
-默认先尝试本地 Ollama（`http://localhost:11434/v1`，模型 `qwen2.5:1.5b`），再依次尝试 `.env` 中已配置的阿里云百炼、DeepSeek 和智谱 AI 密钥。也可以用以下变量固定使用任意兼容 OpenAI Chat Completions API 的服务（设置后不再回退）：
+默认优先尝试 `.env` 中已配置密钥的阿里云百炼，再依次尝试本地 Ollama（`http://localhost:11434/v1`，模型 `qwen2.5:1.5b`）、已配置密钥的 DeepSeek 和智谱 AI。也可以用以下变量固定使用任意兼容 OpenAI Chat Completions API 的服务（设置后不再回退）：
 
 ```dotenv
 BLOG_AI_API_KEY=your-api-key

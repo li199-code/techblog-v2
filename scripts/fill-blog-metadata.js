@@ -167,13 +167,13 @@ function getProviders() {
   }
 
   return [
-    ollamaProvider,
     {
       name: "阿里云百炼",
       apiKey: process.env.ALIBABA_API_KEY,
       baseUrl: "https://dashscope.aliyuncs.com/compatible-mode/v1",
       model: "qwen-plus",
     },
+    ollamaProvider,
     {
       name: "DeepSeek",
       apiKey: process.env.DEEPSEEK_API_KEY,
