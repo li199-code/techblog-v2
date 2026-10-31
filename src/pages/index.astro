@@ -9,7 +9,7 @@ import type { CollectionEntry } from "astro:content";
 import {
   getFilteredCollectionEntries,
   resolvePath,
-  sortByLastUpdateDate,
+  sortByPinnedThenLastUpdateDate,
 } from "@lib/utils";
 import Bio from "../components/Bio.astro";
 import Contact from "@components/Contact.astro";
@@ -21,11 +21,7 @@ async function getCollectionEntries<T extends CollectionName>(
   const { entries } = await getFilteredCollectionEntries(collectionName);
 
   return entries
-    .sort(
-      (a, b) =>
-        Number(b.data.pinned) - Number(a.data.pinned) ||
-        sortByLastUpdateDate(a, b),
-    )
+    .sort(sortByPinnedThenLastUpdateDate)
     .slice(0, maxItems);
 }
 

@@ -28,6 +28,16 @@ export function sortByLastUpdateDate<T extends CollectionName>(
   );
 }
 
+export function sortByPinnedThenLastUpdateDate<T extends CollectionName>(
+  a: CollectionEntry<T>,
+  b: CollectionEntry<T>,
+) {
+  return (
+    Number(b.data.pinned) - Number(a.data.pinned) ||
+    sortByLastUpdateDate(a, b)
+  );
+}
+
 export async function getFilteredCollectionEntries<T extends CollectionName>(
   collectionName: T
 ): Promise<{

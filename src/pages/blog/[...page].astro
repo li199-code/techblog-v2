@@ -1,5 +1,8 @@
 ---
-import { getFilteredCollectionEntries } from "@lib/utils";
+import {
+  getFilteredCollectionEntries,
+  sortByPinnedThenLastUpdateDate,
+} from "@lib/utils";
 import BlogCardButton from "@components/BlogCardButton.astro";
 import RootPageIndex from "@components/RootPageIndex.astro";
 import { BLOG } from "@consts";
@@ -7,7 +10,7 @@ import PageNavigation from "@components/PageNavigation.astro";
 
 export async function getStaticPaths({ paginate }: { paginate: any }) {
   const { entries } = await getFilteredCollectionEntries("blog");
-  const posts = entries.map((post) => ({
+  const posts = entries.sort(sortByPinnedThenLastUpdateDate).map((post) => ({
     params: { slug: post.id },
     props: post,
   }));
